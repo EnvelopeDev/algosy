@@ -1,15 +1,14 @@
 #include <iostream>
 #include <vector>
 #include "array_set.hpp"
-#include "barray_set.hpp"
-#include "bmask_set.hpp"
+/*#include "barray_set.hpp"
+#include "bmask_set.hpp"*/
 #include "list.hpp"
-#include "test.hpp"
-#include <windows.h>
+//#include "test.hpp"
 
-char* substrSets(const char* A, const char* B, const char* C, const char* D);
+//char* substrSets(const char* A, const char* B, const char* C, const char* D);
 
-void testAllSubsets() {
+/*void testAllSubsets() {
     std::cout << "\n=== ГЕНЕРАЦИЯ ВСЕХ ПОДМНОЖЕСТВ ===\n\n";
     
     TestGenerator generator(4, 'A');
@@ -23,29 +22,6 @@ void testAllSubsets() {
     TestGenerator::cleanupVector(subsets);
 }
 
-void testGrayCodeSubsets() {
-    std::cout << "\n=== КОД ГРЕЯ ===\n\n";
-    
-    TestGenerator generator(3, 'A');
-    std::vector<char*> graySubsets = generator.generateGrayCodeSubsets();
-    
-    std::cout << "Подмножества в порядке кода Грея {A,B,C}:\n";
-    for (size_t i = 0; i < graySubsets.size(); i++) {
-        std::cout << i + 1 << ": {" << (graySubsets[i][0] ? graySubsets[i] : "пусто") << "}\n";
-        if (i > 0) {
-            // Проверяем, что соседние отличаются на 1 элемент
-            int diff = 0;
-            for (int j = 0; j < 3; j++) {
-                bool in_prev = (strchr(graySubsets[i-1], 'A' + j) != nullptr);
-                bool in_curr = (strchr(graySubsets[i], 'A' + j) != nullptr);
-                if (in_prev != in_curr) diff++;
-            }
-            std::cout << "   (отличается на " << diff << " элемента)\n";
-        }
-    }
-    
-    TestGenerator::cleanupVector(graySubsets);
-}
 
 void testPermutations() {
     std::cout << "\n=== ВСЕ ПЕРЕСТАНОВКИ ===\n\n";
@@ -106,20 +82,30 @@ void testBasicOperations() {
     TestGenerator::cleanupTests(B, NUM_TESTS);
     TestGenerator::cleanupTests(C, NUM_TESTS);
     TestGenerator::cleanupTests(D, NUM_TESTS);
-}
+}*/
 
 int main() {
-
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
-    // Основные тесты операций
-    testBasicOperations();
-    
-    // Тесты подмножеств и перестановок
-    testAllSubsets();
-    testGrayCodeSubsets();
-    testPermutations();
-    testRandomPermutations();
-    
+    std::cout << "_____ARRAY SET_____\n";
+    char A[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', '\0'}; //B E G H
+    char B[] = {'C', 'D', '\0'};
+    char C[] = {'A', 'F', '\0'};
+    char D[] = {'I', 'J', '\0'};
+    char* E = substrSets(A, B, C, D);
+    for(int i=0; i<strlen(E);i++){
+        std::cout << E[i]<< ' ';
+    }
+    std::cout <<'\n';
+    std::cout << "_____LIST SET_____\n";
+    List<char> setA;
+    List<char>* setB = new List<char>("DP", 2);
+    List<char>* setC = new List<char>("AF", 2);
+    List<char>* setD = new List<char>("GU", 2);
+    List<char>* setRes;
+    for(int i='A';i<'K';i++){
+        setA.push_back(i);
+    }
+    List<char>* lists[3] = {setB, setC, setD};
+    setRes = setA.substractLists(lists, 3);
+    setRes->print();
     return 0;
 }
