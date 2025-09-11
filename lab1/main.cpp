@@ -104,6 +104,7 @@ int main() {
     for(int i='A';i<'K';i++){
         setA.push_back(i);
     }
+    
     List<char>* lists[3] = {setB, setC, setD};
     setRes = setA.substractLists(lists, 3);
     setRes->print();
