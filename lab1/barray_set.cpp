@@ -24,32 +24,6 @@ void BitArraySet::print() const {
 }
 
 //FUNCTIONS//
-//Function producing the difference of sets
-BitArraySet BitArraySet::subtract(const BitArraySet& other) const {
-    BitArraySet result("", universe_size, first_element); //init empty result array
-    for(int i = 0; i < universe_size; i++){
-        result.bits[i] = this->bits[i] && !other.bits[i]; //Applies the operations (∧ and ¬)
-    }
-    return result;
-}
-
-//Function combines sets
-BitArraySet BitArraySet::unionWith(const BitArraySet& other) const {
-    BitArraySet result("", universe_size, first_element); //init empty result array
-    for(int i = 0; i < universe_size; i++){
-        result.bits[i] = this->bits[i] || other.bits[i]; //Applies the operation ∪
-    }
-    return result;
-}
-
-//Function add element into set array
-void BitArraySet::addElement(char element) {
-    int index = element - first_element; //Calculating the index in a bit array
-    if(index >= 0 && index < universe_size){ //checking the index for out of range
-        bits[index] = true; //sets 1 or 0 into element
-    }
-}
-
 //Function for check element existing
 bool BitArraySet::contains(char element) const {
     int index = element - first_element; //Calculating the index
@@ -60,10 +34,14 @@ bool BitArraySet::contains(char element) const {
 }
 
 //Main operation: E = A \ (B ∪ C ∪ D)
-BitArraySet BitArraySet::subtractSets(const BitArraySet& A, const BitArraySet& B, 
+BitArraySet BitArraySet::mainOperation(const BitArraySet& A, const BitArraySet& B, 
                                     const BitArraySet& C, const BitArraySet& D) {
-    BitArraySet unionSet = B.unionWith(C).unionWith(D); //Calculating B ∪ C ∪ D
-    return A.subtract(unionSet); //Calculating A \ (B ∪ C ∪ D) and return result
+    BitArraySet result("", A.universe_size, A.first_element); //init empty result array   
+    for(int i = 0; i < A.universe_size; i++){
+        bool unionBCD = B.bits[i] || C.bits[i] || D.bits[i];//Applies the operation ∪
+        result.bits[i] = A.bits[i] && !unionBCD; //Applies the operations (∧ and ¬)
+    }
+    return result;
 }
 
 //Function converts a set into a string
