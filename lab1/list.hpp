@@ -1,40 +1,33 @@
 #pragma once
 #include <iostream>
-#include <stdexcept> //out_of_range с этим робит
+#include <stdexcept> //for calling exceptions
 
 template<typename T>
 class List
 {
 private:
+    //structure of a node of the list
     struct Node
     {
         T value;
         Node* next;
         Node* prev;
     };
-    Node* head;
-    std::size_t sz;
-    void freeList();
-    Node* getNode(size_t index);
+    Node* head; //pointer to the head of the list
+    std::size_t sz; //size of the list (amount of nodes)
+    void freeList(); //deleting of allocated memory
 public:
-    List();
-    List(const T* arr, size_t size);
-    ~List();
-    void push_back(T value);
-    void print();
-    size_t getSize();
-    T at(size_t index)const;
-    void clear();
-    bool isEmpty();
-    bool contains(const T& value);
-    List* substractLists(List** lists, int numLists);
+    List(); //default constructor
+    List(const T* arr, size_t size); //constructor with parameters (array of values, size of array)
+    ~List(); //destructor
+    void push_back(T value); //adding a new node to the end of the list
+    void print(); //printing the list to the terminal
+    List* substractLists(List** lists, int numLists); //function that subtracts sets from the set A
 };
 
-//
-//Realization of List
-//
 template<typename T>
 List<T>::List(){
+    //initialize empty list
     head=nullptr;
     sz=0;
 }
@@ -46,8 +39,10 @@ List<T>::~List(){
 
 template<typename T>
 List<T>::List(const T* arr, size_t size){
+    //initialize an empty list
     sz=0;
     head=nullptr;
+    //adding values from an array
     for(int i=0;i<size;i++){
         this->push_back(arr[i]);
     }
@@ -55,9 +50,10 @@ List<T>::List(const T* arr, size_t size){
 
 template<typename T>
 void List<T>::freeList(){
+    //if list isn`t empty deleting it
     if(head!=nullptr){
         Node* curr = head;
-        Node* temp;
+        Node* temp; //temporary variable to store an address of the node to delete it
         while(curr!=nullptr){
             temp = curr;
             curr=curr->next;
@@ -68,29 +64,34 @@ void List<T>::freeList(){
 
 template<typename T>
 void List<T>::push_back(T value){
-    Node* newNode = new Node;
+    Node* newNode = new Node; //allocating memory for a new node
     newNode->prev=nullptr;
     newNode->next=nullptr;
     newNode->value=value;
-    sz++;
+    sz++; //increase size of the list
+    //setting the head if the list is empty
     if(head==nullptr){
         head = newNode;
         return;
     }
     Node* curr = head;
+    //going through the list until the end
     while(curr->next!=nullptr){
         curr=curr->next;
     }
+    //adding the new node to the end of a list
     curr->next = newNode;
     newNode->prev=curr;
 }
 
 template<typename T>
 void List<T>::print(){
+    //exiting from the func if the list is empty
     if(head==nullptr){
         return;
     }
     Node* curr = head;
+    //going through the list until the end, printing the values of the nodes
     while(curr!=nullptr)
     {
         std::cout << curr->value << ' ';
@@ -100,62 +101,15 @@ void List<T>::print(){
 }
 
 template<typename T>
-size_t List<T>::getSize(){
-    return sz;
-}
-
-template<typename T>
-T List<T>::at(size_t index)const{
-    return getNode(index)->value;
-}
-
-template<typename T>
-typename List<T>::Node* List<T>::getNode(size_t index){
-    if(index >= sz){
-        throw std::out_of_range("Index " + std::to_string(index) + " is out of range");
-    }
-    Node* curr = head;
-    for(size_t i=0; i<index; i++){
-        curr=curr->next;
-    }
-    return curr;
-}
-
-template<typename T>
-void List<T>::clear(){
-    freeList();
-    sz=0;
-    head=nullptr;
-}
-
-template<typename T>
-bool List<T>::isEmpty(){
-    return !head;
-}
-
-template<typename T>
-bool List<T>::contains(const T& value){
-    if(head==nullptr){
-        return false;
-    }
-    Node* curr = head;
-    while(curr!=nullptr){
-        if(curr->value == value){
-            return true;
-        }
-        curr=curr->next;
-    }
-    return false;
-}
-
-template<typename T>
 List<T>* List<T>::substractLists(List** lists, int numLists){
-    Node* curr = this->head;
-    Node* currSubSet=nullptr;
-    bool flag=true;
-    List<T>* res = new List<T>();
+    Node* curr = this->head; //current node of the main set
+    Node* currSubSet=nullptr; //current node of the subsets
+    bool flag=true; //flag to check if an element of the main set is not contained in the subsets
+    List<T>* res = new List<T>(); //allocating memory for the result list
+    //going through the main set until the end
     while(curr!=nullptr){
         flag=true;
+        //comparing element of the main set with the elements of the subsets
         for(int i=0;(i<numLists)&&flag;i++){
             Node* currSubSet = (*(lists[i])).head;
             while(currSubSet!=nullptr && flag){
