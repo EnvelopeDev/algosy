@@ -1,93 +1,133 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
-#include <string>
-#include <algorithm>
+#include <cstring>
 #include <random>
-#include <chrono>
-#include <cctype>
+#define MAX_SET_SIZE 26
+#define NUM_SETS 4
 
 using namespace std;
 
-vector<vector<char>> generateArrays(int arrayCount, int arraySize) {
-    vector<vector<char>> arrays(arrayCount);
-    string uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    
-    random_device rd;
-    mt19937 rng(rd());
-    
-    for (int i = 0; i < arrayCount; i++) {
-        arrays[i].resize(arraySize);
-        for (int j = 0; j < arraySize; j++) {
-            arrays[i][j] = uppercaseLetters[rng() % 26];
-        }
-    }
-    
-    return arrays;
+random_device rd;
+mt19937 rng(rd());
+
+void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA);
+void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLetters);
+int randomInt(int min, int max); //generates num in [min, max] (including min and max)
+
+
+int main(){
+    cout << "=== Test Generator ===\n\n";
+    int numArrays;
+    size_t minSizeA, maxSizeA;
+    cout << "Enter a number of tests to generate: ";
+    cin >> numArrays;
+    cout << "Enter maximum size of set A (maximum 26): ";
+    cin >> maxSizeA;
+    cout << "Enter minimum size of set A: ";
+    cin >> minSizeA;
+    cout << "\nGenerating tests...\n";
+    generateArraysToCSV(numArrays, minSizeA, maxSizeA);
+    cout << "\n=== Program Completed ===\n";
+    cout << "Sets saved to input.csv\n";
+    return 0;
 }
 
-void writeToCSV(const vector<vector<char>>& arrays) {
-    ofstream csvFile("input.csv");
-    
-    if (!csvFile.is_open()) {
-        cout << "Error opening file input.csv" << endl;
+void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
+    ofstream fout("input.csv");
+    size_t minSubSetSize = minSizeA/4, maxSubSetSize = maxSizeA/4;
+
+    if(!fout.is_open()){
+        cout << "Error opening file input.csv\n";
         return;
     }
-
-    // Записываем по 3 массива в строку в формате: длина;массив;длина;массив;длина;массив
-    for (size_t i = 0; i < arrays.size(); i += 3) {
-        // Проверяем, что есть хотя бы один массив для записи
-        if (i < arrays.size()) {
-            // Первый массив
-            csvFile << arrays[i].size() << ";";
-            for (size_t j = 0; j < arrays[i].size(); j++) {
-                csvFile << arrays[i][j];
-                if (j < arrays[i].size() - 1) csvFile << ",";
-            }
+    char* set = new char[MAX_SET_SIZE+1];
+    bool fillWithAllLetters = true;
+    for(int i=0;i<numArrays;i++){
+        if(i==numArrays/5){
+            fillWithAllLetters = false;
         }
-        
-        // Второй массив (если есть)
-        if (i + 1 < arrays.size()) {
-            csvFile << ";" << arrays[i + 1].size() << ";";
-            for (size_t j = 0; j < arrays[i + 1].size(); j++) {
-                csvFile << arrays[i + 1][j];
-                if (j < arrays[i + 1].size() - 1) csvFile << ",";
+        for(int j=0; j<NUM_SETS;j++){
+            if(j==0){
+                generateSet(set, minSizeA, maxSizeA, fillWithAllLetters);
             }
-        }
-        
-        // Третий массив (если есть)
-        if (i + 2 < arrays.size()) {
-            csvFile << ";" << arrays[i + 2].size() << ";";
-            for (size_t j = 0; j < arrays[i + 2].size(); j++) {
-                csvFile << arrays[i + 2][j];
-                if (j < arrays[i + 2].size() - 1) csvFile << ",";
+            else{
+                generateSet(set, minSubSetSize, maxSubSetSize, false);
             }
+            fout << strlen(set) << ';';
+            for(int l=0;l<strlen(set);l++){
+                fout << set[l];
+                if(l!=strlen(set)-1){
+                    fout << ',';
+                }
+            }
+            fout << ';';
         }
-        
-        csvFile << "\n";
+        fout << '\n';
     }
-    
-    csvFile.close();
+    fout.close();
+    delete[] set;
 }
 
-int main() {
-    cout << "=== Array Generator ===\n\n";
-    
-    int arraySize;
-    vector<vector<char>> arrays;
+void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLetters){
+    if(fillWithAllLetters){
+        for(int i=0;i<MAX_SET_SIZE;i++){
+            set[i] = 'A'+i;
+        }
+        set[MAX_SET_SIZE] = '\0';
+        return;
+    }
+    unsigned long long used = 0ULL, mask = 1ULL;
+    char randChar;
+    bool flag=false;
+    size_t setSize = randomInt(minSize, maxSize);
+    if(setSize>MAX_SET_SIZE/2){
+        for(size_t currSetSize=0; currSetSize!=setSize;currSetSize++){
+            flag=false;
+            mask = 1ULL;
+            randChar = randomInt(0, MAX_SET_SIZE-1);
+            mask = mask<<randChar;
+            if(!(mask & used)){
+                set[currSetSize] = 'A'+randChar;
+                used = used|mask;
+            }
+            else{
+                for(int i=randChar+1;i<MAX_SET_SIZE && !flag;i++){
+                    mask = 1ULL;
+                    mask = mask<<i;
+                    if(!(mask & used)){
+                        set[currSetSize] = 'A'+randChar;
+                        used = used|mask;
+                        flag=true;
+                    }
+                }
+                for(int i=randChar-1;i>-1 && !flag;i--){
+                    mask = 1ULL;
+                    mask = mask<<i;
+                    if(!(mask & used)){
+                        set[currSetSize] = 'A'+randChar;
+                        used = used|mask;
+                        flag=true;
+                    }
+                }
+            }
+        }
+        set[setSize] = '\0';
+    }
+    else{
+        for(size_t currSetSize=0; currSetSize!=setSize;){
+            mask = 1ULL;
+            randChar = randomInt(0, MAX_SET_SIZE-1);
+            mask = mask<<randChar;
+            if(!(mask & used)){
+                set[currSetSize] = 'A'+randChar;
+                used = used|mask;
+                currSetSize++;
+            }
+        }
+        set[setSize] = '\0';
+    }
+}
 
-    cout << "Enter array size: ";
-    cin >> arraySize;
-    
-    cout << "\nGenerating arrays...\n";
-    arrays = generateArrays(300, arraySize);
-
-    writeToCSV(arrays);
-    
-    cout << "\n=== Program Completed ===\n";
-    cout << "Arrays created: " << arrays.size() << endl;
-    cout << "Size of each array: " << (arrays.empty() ? 0 : arrays[0].size()) << " elements\n";
-    cout << "File saved as input.csv" << endl;
-    
-    return 0;
+int randomInt(int min, int max){
+    return (rng()%(max+1-min))+min;
 }
