@@ -22,7 +22,7 @@ public:
     ~List(); //destructor
     void push_back(T value); //adding a new node to the end of the list
     void print(); //printing the list to the terminal
-    List* substractLists(List** lists, int numLists); //function that subtracts sets from the set A
+    List* substractLists(const List& B, const List& C, const List& D); //function that subtracts sets from the set A
 };
 
 template<typename T>
@@ -101,7 +101,7 @@ void List<T>::print(){
 }
 
 template<typename T>
-List<T>* List<T>::substractLists(List** lists, int numLists){
+List<T>* List<T>::substractLists(const List& B, const List& C, const List& D){
     Node* curr = this->head; //current node of the main set
     Node* currSubSet=nullptr; //current node of the subsets
     bool flag=true; //flag to check if an element of the main set is not contained in the subsets
@@ -110,14 +110,28 @@ List<T>* List<T>::substractLists(List** lists, int numLists){
     while(curr!=nullptr){
         flag=true;
         //comparing element of the main set with the elements of the subsets
-        for(int i=0;(i<numLists)&&flag;i++){
-            Node* currSubSet = (*(lists[i])).head;
-            while(currSubSet!=nullptr && flag){
-                if(currSubSet->value==curr->value){
-                    flag=false;
-                }
-                currSubSet = currSubSet->next;
+        currSubSet = B.head;
+        while(currSubSet!=nullptr && flag){
+            if(currSubSet->value==curr->value){
+                flag=false;
             }
+            currSubSet = currSubSet->next;
+        }
+
+        currSubSet = C.head;
+        while(currSubSet!=nullptr && flag){
+            if(currSubSet->value==curr->value){
+                flag=false;
+            }
+            currSubSet = currSubSet->next;
+        }
+
+        currSubSet = D.head;
+        while(currSubSet!=nullptr && flag){
+            if(currSubSet->value==curr->value){
+                flag=false;
+            }
+            currSubSet = currSubSet->next;
         }
         if(flag){
             res->push_back(curr->value);

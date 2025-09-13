@@ -46,18 +46,12 @@ void listSet(){
     char* B, *C, *D;
     char* arrs[3] = {B, C, D};
     inputCharArrays(arrs);
-    List<char>* setB = new List<char>(arrs[0], strlen(arrs[0]));
-    List<char>* setC = new List<char>(arrs[1], strlen(arrs[1]));
-    List<char>* setD = new List<char>(arrs[2], strlen(arrs[2]));
+    List<char> setB(arrs[0], strlen(arrs[0])), setC(arrs[1], strlen(arrs[1])), setD(arrs[2], strlen(arrs[2]));
     List<char>* setRes;
 
-    List<char>* lists[3] = {setB, setC, setD};
-    setRes = setA.substractLists(lists, 3);
+    setRes = setA.substractLists(setB, setC, setD);
     std::cout << "Result set: ";
     setRes->print();
-    delete setB;
-    delete setC;
-    delete setD;
 }
 
 void inputCharArrays(char** arrays, int numArr){
