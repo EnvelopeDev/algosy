@@ -3,21 +3,15 @@
 #include <string>
 #include <vector>
 #include <cstring>
+const int POWER_OF_ALPHABET = 26;
 
-class BitArraySet {
+class BitArraySet{
 private:
     std::vector<bool> bits; //bits set array
-    int universe_size;
-    char first_element;
-    
 public:
-    BitArraySet(const char* elements = "", int size = 26, char first = 'A');
-
-    void print() const; //Method printing set array to console
-
+    BitArraySet(const char* elements);
+    void print(); //Method printing set array to console
     void addElement(char element); //Function add element into set array
-    bool contains(char element) const; //Function for check element existing
-    std::string toString() const; //Function converts a set into a string
-    static BitArraySet mainOperation(const BitArraySet& A, const BitArraySet& B, 
-                                  const BitArraySet& C, const BitArraySet& D); //Main operation: E = A \ (B ∪ C ∪ D)
+    std::string toString(); //Function converts a set into a string
+    BitArraySet subtractSets(const BitArraySet& B, const BitArraySet& C, const BitArraySet& D); //Operation of subtracting : E = A XOR (B OR C OR D)
 };
