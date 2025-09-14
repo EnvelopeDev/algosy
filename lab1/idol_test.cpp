@@ -1,40 +1,8 @@
-#include <fstream>
-#include <vector>
-#include <string>
-#include <set>
-#include <sstream>
+#include "fileManager.hpp"
 
 using namespace std;
 
-//Function converts a CSV format string into a vector of character sets 
-vector<set<char>> parseCSVLine(const string& line){
-    vector<set<char>> sets; // Container for results
-    stringstream ss(line); // Stream for parsing the string
-    string token; // Temporary storage for tokens
-
-    // Split the string by ';' delimiter
-    while(getline(ss, token, ';')){
-        if(token.empty()) continue;
-        
-        // Look for tokens containing commas (these are our sets)
-        if(token.find(',') != string::npos){
-            set<char> currentSet;
-            stringstream setSS(token);
-            string element;
-            
-            // Split the token by commas
-            while(getline(setSS, element, ',')){
-                if(!element.empty()){
-                    currentSet.insert(element[0]);
-                }
-            }
-            sets.push_back(currentSet); // Save the set
-        }
-    }
-    return sets; // Return all found sets
-}
-
-//Main operation: E = A xor (B ∪ C ∪ D)
+//Operation: E = A xor (B ∪ C ∪ D)
 set<char> subtractSets(const vector<set<char>>& sets){
     set<char> result; // Set for results
     
