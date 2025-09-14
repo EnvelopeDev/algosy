@@ -13,8 +13,14 @@ void generatorInterface(){
     cin >> numArrays;
     cout << "Enter maximum size of set A (maximum 26): ";
     cin >> maxSizeA;
-    cout << "Enter minimum size of set A: ";
+    if(maxSizeA>26){
+        maxSizeA=26;
+    }
+    cout << "Enter minimum size of set A (minimum 4): ";
     cin >> minSizeA;
+    if(minSizeA < 4){
+        minSizeA=4;
+    }
     cout << "\nGenerating tests...\n";
     generateArraysToCSV(numArrays, minSizeA, maxSizeA);
     cout << "\n=== Program Completed ===\n";
