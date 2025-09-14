@@ -4,13 +4,14 @@
 #include "list.hpp"
 #include "barray_set.hpp"
 #include "bmask_set.hpp"
-//#include "test.hpp"
+#include "generator.hpp"
 
-void arraySet();
-void listSet();
-void bitArraySet();
-void bitMaskSet();
+void arraySet(bool doInputFromFile);
+void listSet(bool doInputFromFile);
+void bitArraySet(bool doInputFromFile);
+void bitMaskSet(bool doInputFromFile);
 void inputCharArrays(char** arrays, int numArr=4);
+
 
 int main(){
     //SET WITH ARRAY
@@ -20,11 +21,12 @@ int main(){
     //SET WITH BIT ARRAY
     //bitArraySet();
     //SET WITH BIT MASK
-    bitMaskSet();
+    //bitMaskSet();
+    generatorInterface();
     return 0;
 }
 
-void arraySet(){
+void arraySet(bool doInputFromFile){
     std::cout << "          _____ARRAY SET_____\n\n";
     char* sets[4] = {};
     inputCharArrays(sets);
@@ -43,7 +45,7 @@ void arraySet(){
     delete[] E;
 }
 
-void listSet(){
+void listSet(bool doInputFromFile){
     std::cout << "          _____LIST SET_____\n\n";
     char* sets[4] = {};
     inputCharArrays(sets);
@@ -60,7 +62,7 @@ void listSet(){
     delete setRes;
 }
 
-void bitArraySet(){
+void bitArraySet(bool doInputFromFile){
     std::cout << "          _____BIT ARRAY SET_____\n\n";
     char* sets[4] = {};
     inputCharArrays(sets);
@@ -74,7 +76,7 @@ void bitArraySet(){
     }
 }
 
-void bitMaskSet(){
+void bitMaskSet(bool doInputFromFile){
     std::cout << "          _____BIT MASK SET_____\n\n";
     char* sets[4] = {};
     inputCharArrays(sets);

@@ -1,21 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include <random>
-#define MAX_SET_SIZE 26
-#define NUM_SETS 4
+#include "generator.hpp"
 
 using namespace std;
 
 random_device rd;
 mt19937 rng(rd());
 
-void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA);
-void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLetters);
-int randomInt(int min, int max); //generates num in [min, max] (including min and max)
-
-
-int main(){
+void generatorInterface(){
     cout << "=== Test Generator ===\n\n";
     int numArrays;
     size_t minSizeA, maxSizeA;
@@ -29,7 +19,6 @@ int main(){
     generateArraysToCSV(numArrays, minSizeA, maxSizeA);
     cout << "\n=== Program Completed ===\n";
     cout << "Sets saved to input.csv\n";
-    return 0;
 }
 
 void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
@@ -95,7 +84,7 @@ void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLett
                     mask = 1ULL;
                     mask = mask<<i;
                     if(!(mask & used)){
-                        set[currSetSize] = 'A'+randChar;
+                        set[currSetSize] = 'A'+i;
                         used = used|mask;
                         flag=true;
                     }
@@ -104,7 +93,7 @@ void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLett
                     mask = 1ULL;
                     mask = mask<<i;
                     if(!(mask & used)){
-                        set[currSetSize] = 'A'+randChar;
+                        set[currSetSize] = 'A'+i;
                         used = used|mask;
                         flag=true;
                     }
