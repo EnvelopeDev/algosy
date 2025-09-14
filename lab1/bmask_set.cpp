@@ -55,3 +55,13 @@ void BitMask::print(){
     }
     std::cout << '\n';
 }
+
+char* BitMask::toDynChar(){
+    std::string set = this->toString();
+    char* res = new char[set.length()+1];
+    for(int i=0;i<set.length();i++){
+        res[i] = set[i];
+    }
+    res[set.length()] = '\0';
+    return res;
+}

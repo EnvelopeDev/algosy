@@ -12,6 +12,7 @@ public:
     BitMask unionWith(const BitMask& other) const;
     BitMask subtract(const BitMask& other);
     std::string toString();
+    char* toDynChar();
     void print();
     BitMask subtractSets(const BitMask& B, const BitMask& C, const BitMask& D); //E = A \ (B ∪ C ∪ D)
 };

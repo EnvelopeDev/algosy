@@ -13,5 +13,6 @@ public:
     void print(); //Method printing set array to console
     void addElement(char element); //Function add element into set array
     std::string toString(); //Function converts a set into a string
+    char* toDynChar();
     BitArraySet subtractSets(const BitArraySet& B, const BitArraySet& C, const BitArraySet& D); //Operation of subtracting : E = A XOR (B OR C OR D)
 };

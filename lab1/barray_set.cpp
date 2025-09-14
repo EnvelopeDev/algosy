@@ -54,3 +54,13 @@ std::string BitArraySet::toString(){
     }
     return result;
 }
+
+char* BitArraySet::toDynChar(){
+    std::string set = this->toString();
+    char* res = new char[set.length()+1];
+    for(int i=0;i<set.length();i++){
+        res[i] = set[i];
+    }
+    res[set.length()] = '\0';
+    return res;
+}
