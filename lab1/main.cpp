@@ -186,7 +186,6 @@ long long* testSets(std::vector<char**> sets){
 std::vector<char*> arraySet(std::vector<char**> sets){
     std::vector<char*> setsRes;
     char* E;
-
     for(int i=0; i<sets.size();i++){
         E = subtractionSets(sets[i][0], sets[i][1], sets[i][2], sets[i][3]);
         setsRes.push_back(E);

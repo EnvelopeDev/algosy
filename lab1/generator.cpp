@@ -29,7 +29,7 @@ void generatorInterface(){
 
 void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
     ofstream fout("input.csv");
-    size_t minSubSetSize = minSizeA/4, maxSubSetSize = maxSizeA/4;
+    size_t minSubSetSize = minSizeA/4 + 1, maxSubSetSize = maxSizeA/4 + 1;
 
     if(!fout.is_open()){
         cout << "Error opening file input.csv\n";
