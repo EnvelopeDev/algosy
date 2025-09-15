@@ -1,28 +1,50 @@
 #include "fileManager.hpp"
 
-//Function compares two files
+// Функция для преобразования строки в set (игнорирует порядок и дубликаты)
+set<string> stringToSet(const string& line) {
+    set<string> result;
+    stringstream ss(line);
+    string item;
+    
+    while (getline(ss, item, ',')) {
+        result.insert(item);
+    }
+    
+    return result;
+}
+
+// Функция сравнивает два файла, используя set для сравнения строк
 int compareFiles(const string& filename1, const string& filename2) {
     ifstream file1(filename1);
     ifstream file2(filename2);
 
+    if (!file1.is_open() || !file2.is_open()) {
+        cerr << "Ошибка открытия файлов!" << endl;
+        return -1;
+    }
+
     string line1, line2;
-    bool f1;
-    bool f2;
     int diffCount = 0;
+    int lineNumber = 0;
 
-    do{
-        f1 = static_cast<bool>(getline(file1, line1));
-        f2 = static_cast<bool>(getline(file2, line2));
-
-        if(f1 && f2) if (line1 != line2) diffCount++;
-    }while(f1 && f2);
+    while (getline(file1, line1) && getline(file2, line2)) {
+        lineNumber++;
+        
+        // Преобразуем строки в sets
+        set<string> set1 = stringToSet(line1);
+        set<string> set2 = stringToSet(line2);
+        
+        // Сравниваем sets
+        if (set1 != set2) {
+            diffCount++;
+        }
+    }
 
     file1.close();
     file2.close();
 
     return diffCount;
 }
-
 void writeToCSV(const vector<vector<char>>& arrays){
     ofstream csvFile("input.csv");
 
