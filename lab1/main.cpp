@@ -9,13 +9,14 @@
 #include "barray_set.hpp"
 #include "bmask_set.hpp"
 #include "generator.hpp"
+#include "fileManager.hpp"
 
 long long* testSets(std::vector<char**> sets);
 std::vector<char*> arraySet(std::vector<char**> sets);
 std::vector<char*> listSet(std::vector<List<char>*> sets);
 std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets);
 std::vector<char*> bitMaskSet(std::vector<BitMask*> sets);
-char** parseCSVLine(const std::string& line);
+char** parseFileLine(const std::string& line);
 char** inputCharArrays();
 
 int main(){
@@ -46,7 +47,7 @@ int main(){
         }
         //reading input.csv
         while(getline(fin, line)){
-            setGroup = parseCSVLine(line);
+            setGroup = parseFileLine(line);
             sets.push_back(setGroup);
         }
     }
@@ -66,8 +67,8 @@ int main(){
 }
 
 long long* testSets(std::vector<char**> sets){
-    long long* times = new long long[4];
-    std::vector<List<char>*> listSets;
+    long long* times = new long long[4]; //allocating memory for array of runtimes
+    std::vector<List<char>*> listSets; //
     std::vector<BitArraySet*> baset;
     std::vector<BitMask*> bmset;
     std::ofstream fout("output.txt");
@@ -246,7 +247,7 @@ char** inputCharArrays(){
 }
 
 
-char** parseCSVLine(const std::string& line){
+char** parseFileLine(const std::string& line){
     std::stringstream ss(line);
     std::string token;
     char** sets = new char*[4];
