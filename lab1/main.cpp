@@ -11,13 +11,13 @@
 #include "generator.hpp"
 #include "fileManager.hpp"
 
-long long* testSets(std::vector<char**> sets);
-std::vector<char*> arraySet(std::vector<char**> sets);
-std::vector<char*> listSet(std::vector<List<char>*> sets);
-std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets);
-std::vector<char*> bitMaskSet(std::vector<BitMask*> sets);
-char** parseFileLine(const std::string& line);
-char** inputCharArrays();
+long long* testSets(std::vector<char**> sets); //function does tests from vector sets, returning runtimes in microseconds
+std::vector<char*> arraySet(std::vector<char**> sets); //function doing tests of array set version
+std::vector<char*> listSet(std::vector<List<char>*> sets); //function doing tests of list set version
+std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets); //function doing tests of bit array set version
+std::vector<char*> bitMaskSet(std::vector<BitMask*> sets); //function doing tests of bit mask set version
+char** parseFileLine(const std::string& line); //reads the line of .csv file, returns a group of 4 sets
+char** inputCharArrays(); //does the input from the console, returns group of 4 sets
 
 int main(){
     bool inpFromFile = true; //flag to check if we need to do the input from the file
@@ -68,32 +68,37 @@ int main(){
 
 long long* testSets(std::vector<char**> sets){
     long long* times = new long long[4]; //allocating memory for array of runtimes
-    std::vector<List<char>*> listSets; //
-    std::vector<BitArraySet*> baset;
-    std::vector<BitMask*> bmset;
-    std::ofstream fout("output.txt");
-    std::vector<char*> results;
+    std::vector<List<char>*> listSets; //vector with tests for listSet() with the lists of a groups of the sets
+    std::vector<BitArraySet*> baset; //vector with tests fot bitArraySet() with sets in BitArray Form
+    std::vector<BitMask*> bmset; //vector with tests fot bitMaskSet() with sets in BitMask Form
+    std::ofstream foutA("outputAr.txt"); //file with results of array set
+    std::ofstream foutL("outputLi.txt"); //file with results of list set
+    std::ofstream foutBa("outputBa.txt"); //file with results of Bit array set
+    std::ofstream foutBm("outputBm.txt"); //file with results of Bit mask set
+    std::vector<char*> results; //vector with results
 
     std::cout << "\n\n=====ARRAY SET=====\n";
-    auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now(); //timer starts
     results = arraySet(sets);
-    auto end = std::chrono::high_resolution_clock::now();
-    times[0] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+    auto end = std::chrono::high_resolution_clock::now(); //timer stops
+    times[0] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
     std::cout << "Array set completed successfully!\n";
     std::cout <<"RUNTIME: " << times[0] << '\n';
 
+    //writing results to the file with array set results
     for(int i=0;i<results.size();i++){
         for(int j=0;j<strlen(results[i]);j++){
-            fout << results[i][j];
+            foutA << results[i][j];
             if(j!=strlen(results[i])-1){
-                fout << ',';
+                foutA << ',';
             }
         }
-        fout << '\n';
+        foutA << '\n';
     }
-    fout << "=\n";
+    foutA << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
+    //converting vector with char** to List, BitArraySet, Bitmask
     for(int i=0;i<sets.size();i++){
         List<char>* lists = new List<char>[4]{List<char>(sets[i][0], strlen(sets[i][0])), List<char>(sets[i][1], strlen(sets[i][1])),\
              List<char>(sets[i][2], strlen(sets[i][2])), List<char>(sets[i][3], strlen(sets[i][3]))};
@@ -116,14 +121,14 @@ long long* testSets(std::vector<char**> sets){
 
     for(int i=0;i<results.size();i++){
         for(int j=0;j<strlen(results[i]);j++){
-            fout << results[i][j];
+            foutL << results[i][j];
             if(j!=strlen(results[i])-1){
-                fout << ',';
+                foutL << ',';
             }
         }
-        fout << '\n';
+        foutL << '\n';
     }
-    fout << "=\n";
+    foutL << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     std::cout << "=====BIT ARRAY SET=====\n";
@@ -136,14 +141,14 @@ long long* testSets(std::vector<char**> sets){
 
     for(int i=0;i<results.size();i++){
         for(int j=0;j<strlen(results[i]);j++){
-            fout << results[i][j];
+            foutBa << results[i][j];
             if(j!=strlen(results[i])-1){
-                fout << ',';
+                foutBa << ',';
             }
         }
-        fout << '\n';
+        foutBa << '\n';
     }
-    fout << "=\n";
+    foutBa << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     std::cout << "=====BIT MASK SET=====\n";
@@ -156,14 +161,14 @@ long long* testSets(std::vector<char**> sets){
 
     for(int i=0;i<results.size();i++){
         for(int j=0;j<strlen(results[i]);j++){
-            fout << results[i][j];
+            foutBm << results[i][j];
             if(j!=strlen(results[i])-1){
-                fout << ',';
+                foutBm << ',';
             }
         }
-        fout << '\n';
+        foutBm << '\n';
     }
-    fout << "=\n";
+    foutBm << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     return times;
