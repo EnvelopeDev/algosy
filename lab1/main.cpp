@@ -10,6 +10,7 @@
 #include "bmask_set.hpp"
 #include "generator.hpp"
 #include "fileManager.hpp"
+#include "idol_test.hpp"
 
 long long* testSets(std::vector<char**> sets); //function does tests from vector sets, returning runtimes in microseconds
 std::vector<char*> arraySet(std::vector<char**> sets); //function doing tests of array set version
@@ -18,12 +19,14 @@ std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets); //function doing
 std::vector<char*> bitMaskSet(std::vector<BitMask*> sets); //function doing tests of bit mask set version
 char** parseFileLine(const std::string& line); //reads the line of .csv file, returns a group of 4 sets
 char** inputCharArrays(); //does the input from the console, returns group of 4 sets
+int* compareWithSTLset();
 
 int main(){
     bool inpFromFile = true; //flag to check if we need to do the input from the file
     bool needGenNewTests=true; //flag to check if we need to generate new tests in input.csv
-    std::ifstream fin("input.csv");
+    std::ifstream fin("input.csv"); //file with generated tests
     char userOpt; //user option
+    int* errors;
     long long* time; //array of runtimes (array, list, bit array, bitmask)
     std::vector<char**> sets; //sets from input.csv
     std::vector<char*> setsRes; //results of the program, we need to output to output.txt
@@ -62,6 +65,16 @@ int main(){
     std::cout << "List: " << time[1] << '\n';
     std::cout << "Bit Array: " << time[2] << '\n';
     std::cout << "Bit Mask: " << time[3] << '\n';
+    std::cout << "\n";
+
+    testIdolSet();
+    errors = compareWithSTLset();
+
+    std::cout << "=====NUMBER OF ERRORS====\n";
+    std::cout << "Array: " << errors[0] << '\n';
+    std::cout << "List: " << errors[1] << '\n';
+    std::cout << "Bit Array: " << errors[2] << '\n';
+    std::cout << "Bit Mask: " << errors[3] << '\n';
     std::cout << '\n';
     return 0;
 }
@@ -95,7 +108,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutA << '\n';
     }
-    foutA << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     //converting vector with char** to List, BitArraySet, Bitmask
@@ -128,7 +140,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutL << '\n';
     }
-    foutL << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     std::cout << "=====BIT ARRAY SET=====\n";
@@ -148,7 +159,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutBa << '\n';
     }
-    foutBa << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     std::cout << "=====BIT MASK SET=====\n";
@@ -168,7 +178,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutBm << '\n';
     }
-    foutBm << "=\n";
     std::cout << "Results was saved to output.txt\n\n";
 
     return times;
@@ -281,4 +290,13 @@ char** parseFileLine(const std::string& line){
         }
     }
     return sets;
+}
+
+int* compareWithSTLset(){
+    int* errors = new int[4];
+    errors[0] = compareFiles("idol_output.txt", "outputAr.txt");
+    errors[1] = compareFiles("idol_output.txt", "outputLi.txt");
+    errors[2] = compareFiles("idol_output.txt", "outputBa.txt");
+    errors[3] = compareFiles("idol_output.txt", "outputBm.txt");
+    return errors;
 }

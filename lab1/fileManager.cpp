@@ -1,7 +1,7 @@
 #include "fileManager.hpp"
 
 //Function compares two files
-void compareFiles(const string& filename1, const string& filename2) {
+int compareFiles(const string& filename1, const string& filename2) {
     ifstream file1(filename1);
     ifstream file2(filename2);
 
@@ -20,11 +20,7 @@ void compareFiles(const string& filename1, const string& filename2) {
     file1.close();
     file2.close();
 
-    if(diffCount == 0){
-        cout << "ALL OKAY :)\n";
-    } else{
-        cout << "NOT OKAY :( different lines count: " << diffCount << "\n";
-    }
+    return diffCount;
 }
 
 void writeToCSV(const vector<vector<char>>& arrays){

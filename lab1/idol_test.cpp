@@ -1,6 +1,4 @@
-#include "fileManager.hpp"
-
-using namespace std;
+#include "idol_test.hpp"
 
 //Operation: E = A xor (B ∪ C ∪ D)
 set<char> subtractSets(const vector<set<char>>& sets){
