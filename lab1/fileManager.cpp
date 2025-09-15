@@ -1,11 +1,11 @@
 #include "fileManager.hpp"
 
-// Функция для преобразования строки в set (игнорирует порядок и дубликаты)
 set<string> stringToSet(const string& line) {
     set<string> result;
-    stringstream ss(line);
+    stringstream ss(line); //openning stream in line
     string item;
     
+    //split line by commas
     while (getline(ss, item, ',')) {
         result.insert(item);
     }
@@ -13,29 +13,29 @@ set<string> stringToSet(const string& line) {
     return result;
 }
 
-// Функция сравнивает два файла, используя set для сравнения строк
 int compareFiles(const string& filename1, const string& filename2) {
     ifstream file1(filename1);
     ifstream file2(filename2);
 
-    if (!file1.is_open() || !file2.is_open()) {
+    if(!file1.is_open() || !file2.is_open()){
         cerr << "Ошибка открытия файлов!" << endl;
         return -1;
     }
 
-    string line1, line2;
-    int diffCount = 0;
+    string line1, line2; //lines of two files
+    int diffCount = 0; //number of the differents of the files
     int lineNumber = 0;
 
-    while (getline(file1, line1) && getline(file2, line2)) {
+    //reading file line by line, comparing lines
+    while(getline(file1, line1) && getline(file2, line2)){
         lineNumber++;
         
-        // Преобразуем строки в sets
+        //Converting strings to sets
         set<string> set1 = stringToSet(line1);
         set<string> set2 = stringToSet(line2);
         
-        // Сравниваем sets
-        if (set1 != set2) {
+        //Comparing sets
+        if(set1 != set2){
             diffCount++;
         }
     }
@@ -45,71 +45,30 @@ int compareFiles(const string& filename1, const string& filename2) {
 
     return diffCount;
 }
-void writeToCSV(const vector<vector<char>>& arrays){
-    ofstream csvFile("input.csv");
 
-    if(!csvFile.is_open()){
-        cout << "Error opening file input.csv" << endl;
-        return;
-    }
-
-    for(int i = 0; i < arrays.size(); i += 3){
-
-        if(i < arrays.size()){
-
-            csvFile << arrays[i].size() << ";";
-            for(int j = 0; j < arrays[i].size(); j++){
-                csvFile << arrays[i][j];
-                if(j < arrays[i].size() - 1) csvFile << ",";
-            }
-        }
-
-        if(i + 1 < arrays.size()){
-            csvFile << ";" << arrays[i + 1].size() << ";";
-            for(int j = 0; j < arrays[i + 1].size(); j++){
-                csvFile << arrays[i + 1][j];
-                if(j < arrays[i + 1].size() - 1) csvFile << ",";
-            }
-        }
-
-        if(i + 2 < arrays.size()){
-            csvFile << ";" << arrays[i + 2].size() << ";";
-            for(int j = 0; j < arrays[i + 2].size(); j++){
-                csvFile << arrays[i + 2][j];
-                if(j < arrays[i + 2].size() - 1) csvFile << ",";
-            }
-        }
-
-        csvFile << "\n";
-    }
-
-    csvFile.close();
-}
-
-//Function converts a CSV format string into a vector of character sets
 vector<set<char>> parseCSVLine(const string& line){
-    vector<set<char>> sets; // Container for results
-    stringstream ss(line); // Stream for parsing the string
-    string token; // Temporary storage for tokens
+    vector<set<char>> sets; //container for results
+    stringstream ss(line); //stream for parsing the string
+    string token; //temporary storage for tokens
 
-    // Split the string by ';' delimiter
+    //split the string by ';' delimiter
     while(getline(ss, token, ';')){
         if(token.empty()) continue;
 
-        // Look for tokens containing commas (these are our sets)
+        //look for tokens containing commas (these are our sets)
         if(token.find(',') != string::npos){
             set<char> currentSet;
             stringstream setSS(token);
             string element;
 
-            // Split the token by commas
+            //split the token by commas
             while(getline(setSS, element, ',')){
                 if(!element.empty()){
                     currentSet.insert(element[0]);
                 }
             }
-            sets.push_back(currentSet); // Save the set
+            sets.push_back(currentSet); //save the set
         }
     }
-    return sets; // Return all found sets
+    return sets;
 }

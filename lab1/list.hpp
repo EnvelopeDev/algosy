@@ -23,7 +23,7 @@ public:
     void push_back(T value); //adding a new node to the end of the list
     void print(); //printing the list to the terminal
     List* substractLists(const List& B, const List& C, const List& D); //function that subtracts sets from the set A
-    char* toDynChar();
+    char* toDynChar(); //converting the list to array (only for List<char>)
 };
 
 template<typename T>
@@ -144,10 +144,11 @@ List<T>* List<T>::substractLists(const List& B, const List& C, const List& D){
 
 template<>
 char* List<char>::toDynChar() {
-    char* result = new char[sz+1];
+    char* result = new char[sz+1]; //allocating memory for the result array
     Node* curr = head;
     int i=0;
     
+    //going through the list until the end, converting values from list to array
     while(curr != nullptr){
         result[i++] = curr->value;
         curr = curr->next;

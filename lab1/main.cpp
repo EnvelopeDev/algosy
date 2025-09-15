@@ -10,7 +10,7 @@
 #include "bmask_set.hpp" //realization of set with using a bit mask
 #include "generator.hpp" //generation of test cases (groups of 4 sets - A, B, C, D)
 #include "fileManager.hpp" //for working with files (reading, writing, compare)
-#include "idol_test.hpp" //
+#include "idol_test.hpp" //to create expected results (stl set)
 
 long long* testSets(std::vector<char**> sets); //function does tests from vector sets, returning runtimes in microseconds
 std::vector<char*> arraySet(std::vector<char**> sets); //function doing tests of array set version
