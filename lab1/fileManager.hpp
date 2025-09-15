@@ -1,4 +1,3 @@
-/*This file is required for generator.cpp and idol_test.cpp programs to work with files*/
 #include <iostream>
 #include <fstream>
 #include <string>
