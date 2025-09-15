@@ -19,15 +19,15 @@ char** parseCSVLine(const std::string& line);
 char** inputCharArrays();
 
 int main(){
-    bool inpFromFile = true;
-    bool needGenNewTests=true;
+    bool inpFromFile = true; //flag to check if we need to do the input from the file
+    bool needGenNewTests=true; //flag to check if we need to generate new tests in input.csv
     std::ifstream fin("input.csv");
-    char userOpt;
-    long long* time;
-    std::vector<char**> sets;
-    std::vector<char*> setsRes;
-    std::string line;
-    char** setGroup;
+    char userOpt; //user option
+    long long* time; //array of runtimes (array, list, bit array, bitmask)
+    std::vector<char**> sets; //sets from input.csv
+    std::vector<char*> setsRes; //results of the program, we need to output to output.txt
+    std::string line; //line in input.csv to read
+    char** setGroup; //group of 4 sets (A, B, C, D)
 
     std::cout << "Input sets from input.csv?(y/n): ";
     std::cin >> userOpt;
@@ -42,17 +42,20 @@ int main(){
             needGenNewTests=false;
         }
         if(needGenNewTests){
-            generatorInterface();
+            generatorInterface(); //calling generator.cpp to generate new tests
         }
+        //reading input.csv
         while(getline(fin, line)){
             setGroup = parseCSVLine(line);
             sets.push_back(setGroup);
         }
     }
     else{
+        //adding sets inputed from the console
         sets.push_back(inputCharArrays());
     }
-    time = testSets(sets);
+    time = testSets(sets); //doing tests
+    //outputing runtimes
     std::cout << "=====RUNTIMES====\n";
     std::cout << "Array: " << time[0] << '\n';
     std::cout << "List: " << time[1] << '\n';
