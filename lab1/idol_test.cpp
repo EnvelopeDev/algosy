@@ -23,31 +23,29 @@ set<char> subtractSets(const vector<set<char>>& sets){
     return result;
 }
 
-int main(){
+//Function creates perfect csv file processing in txt
+void testIdolSet(){
     ifstream inputFile("input.csv");
     ofstream outputFile("idol_output.txt");
 
     string line;
-    int lineCount = 0;
     
     while(getline(inputFile, line)){
-        lineCount++;
-        vector<set<char>> sets = parseCSVLine(line);
+        vector<set<char>> sets = parseCSVLine(line); //Converts a csv string into a vector of sets
 
-        set<char> result = subtractSets(sets);
-        
-        for(auto it = result.begin(); it != result.end();){
-            outputFile << *it;
-            if(++it != result.end()){
-                outputFile << ",";
-            }
+        set<char> result = subtractSets(sets); //Performs the operation of subtracting sets
+
+        //Write result sets to a txt file with using a comma
+        bool first = true;
+        for(const char& element : result){
+            if(!first) outputFile << ","; //comma for all lines
+            outputFile << element;
+            first = false;
         }
-        outputFile << endl;
+        outputFile << '\n';
         
     }
     
     inputFile.close();
     outputFile.close();
-    
-    return 0;
 }
