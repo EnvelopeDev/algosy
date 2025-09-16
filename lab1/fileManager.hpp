@@ -5,7 +5,7 @@
 #include <vector>
 #include <set>
 #include <sstream>
-#include <algorithm> //fot find()
+#include <algorithm> //for find()
 #include <random>
 
 using namespace std;
