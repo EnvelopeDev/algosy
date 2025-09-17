@@ -7,7 +7,7 @@ const int POWER_OF_ALPHABET = 26;
 
 class BitArraySet{
 private:
-    std::vector<bool> bits; //bits set array
+    bool* bits; //bits set array
 public:
     BitArraySet(const char* elements); //constructor with parameter (array of chars)
     void addElement(char element); //Function adds element into set array

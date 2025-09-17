@@ -1,7 +1,10 @@
 #include "barray_set.hpp"
 
 BitArraySet::BitArraySet(const char* elements){
-    bits.resize(POWER_OF_ALPHABET, false); //init vector with 0
+    bits = new bool[POWER_OF_ALPHABET];
+    for(int i=0;i<POWER_OF_ALPHABET;i++){
+        bits[i]=false;
+    }
     //entering array elements (converting from char* to vector<bool>)
     if(elements != nullptr){
         size_t length = strlen(elements);
