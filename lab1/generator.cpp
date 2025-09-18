@@ -7,7 +7,7 @@ random_device rd;
 mt19937 rng(rd());
 
 void generatorInterface(){
-    cout << "=== Test Generator ===\n\n";
+    cout << "\n==============[TEST GENERATOR]==============\n";
     int numArrays;
     size_t minSizeA, maxSizeA;
 
@@ -29,8 +29,8 @@ void generatorInterface(){
     cout << "\nGenerating tests...\n";
     //call the function of generator
     generateArraysToCSV(numArrays, minSizeA, maxSizeA);
-    cout << "\n=== Program Completed ===\n";
-    cout << "Sets saved to input.csv\n";
+    cout << "Generation completed!\n";
+    cout << "==========================================\n\n";
 }
 
 void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
