@@ -30,7 +30,7 @@ void generatorInterface(){
     //call the function of generator
     generateArraysToCSV(numArrays, minSizeA, maxSizeA);
     cout << "Generation completed!\n";
-    cout << "==========================================\n\n";
+    cout << "============================================\n\n";
 }
 
 void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){

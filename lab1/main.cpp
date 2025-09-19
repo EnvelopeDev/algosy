@@ -60,23 +60,23 @@ int main(){
     time = testSets(sets); //doing tests
 
     //outputing runtimes
-    std::cout << "=====RUNTIMES====\n";
-    std::cout << "Array: " << time[0] << " microseconds" <<'\n';
-    std::cout << "List: " << time[1] << " microseconds"<< '\n';
-    std::cout << "Bit Array: " << time[2]  << " microseconds"<< '\n';
-    std::cout << "Bit Mask: " << time[3] << " microseconds" << '\n';
-    std::cout << "\n";
+    std::cout << "=================[RUNTIMES]=================\n";
+    std::cout << "Array: " << time[0] << " ms" <<'\n';
+    std::cout << "List: " << time[1] << " ms" <<'\n';
+    std::cout << "Bit Array: " << time[2] << " ms" <<'\n';
+    std::cout << "Bit Mask: " << time[3] << " ms" <<'\n';
+    std::cout << "============================================\n\n";
 
     testIdolSet(); //doing expected results with stl set
     errors = compareWithSTLset(); //comparing the expected result with actual result
 
     //outputing numbers of errors
-    std::cout << "=====NUMBER OF ERRORS====\n";
+    std::cout << "=============[NUMBER OF ERRORS]=============\n";
     std::cout << "Array: " << errors[0] << '\n';
     std::cout << "List: " << errors[1] << '\n';
     std::cout << "Bit Array: " << errors[2] << '\n';
     std::cout << "Bit Mask: " << errors[3] << '\n';
-    std::cout << '\n';
+    std::cout << "============================================\n\n";
 
     std::ifstream finA("outputAr.txt"); //file with results of array set
     std::ifstream finL("outputLi.txt"); //file with results of list set
@@ -85,22 +85,22 @@ int main(){
     std::string out;
 
     if(sets.size() < 11){
-        for(int i=0;i<sets.size();i++){
-            getline(finA, out);
-            setGroup = sets[i];
-            std::cout << i+1 << " test\n";
-            for(int j=0;j<4;j++){
-                std::cout << static_cast<char>('A'+j) << ": ";
-                for(int l=0; l<strlen(setGroup[j]);l++){
-                    std::cout << setGroup[j][l];
-                    if(l!=strlen(setGroup[j])-1){
-                        std::cout << ", ";
-                    }
-                }
-                std::cout << '\n';
-            }
-            std::cout <<"E: "<< out << "\n\n";
-        }
+       for(int i=0;i<sets.size();i++){
+           getline(finA, out);
+           setGroup = sets[i];
+           std::cout << i+1 << " test\n";
+           for(int j=0;j<4;j++){
+               std::cout << static_cast<char>('A'+j) << ": ";
+               for(int l=0; l<strlen(setGroup[j]);l++){
+                   std::cout << setGroup[j][l];
+                   if(l!=strlen(setGroup[j])-1){
+                       std::cout << ", ";
+                   }
+               }
+               std::cout << '\n';
+           }
+           std::cout <<"E: "<< out << "\n\n";
+       }
     }
     return 0;
 }
@@ -116,13 +116,10 @@ long long* testSets(std::vector<char**> sets){
     std::ofstream foutBm("outputBm.txt"); //file with results of Bit mask set
     std::vector<char*> results; //vector with results
 
-    std::cout << "\n\n=====ARRAY SET=====\n";
     auto start = std::chrono::high_resolution_clock::now(); //timer starts
     results = arraySet(sets);
     auto end = std::chrono::high_resolution_clock::now(); //timer stops
     times[0] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
-    std::cout << "Array set completed successfully!\n";
-    std::cout <<"RUNTIME: " << times[0] << '\n';
 
     //writing results to the file with array set results
     for(int i=0;i<results.size();i++){
@@ -134,7 +131,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutA << '\n';
     }
-    std::cout << "Results was saved to output.txt\n\n";
 
     //converting vector with char** to List, BitArraySet, Bitmask vectors
     for(int i=0;i<sets.size();i++){
@@ -149,13 +145,10 @@ long long* testSets(std::vector<char**> sets){
         bmset.push_back(bmsets);
     }
 
-    std::cout << "=====LIST SET=====\n";
     start = std::chrono::high_resolution_clock::now(); //timer starts
     results = listSet(listSets);
     end = std::chrono::high_resolution_clock::now(); //timer stops
     times[1] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
-    std::cout << "List set completed successfully!\n";
-    std::cout <<"RUNTIME: " << times[1] << '\n';
 
     //writing results to the file with list set results
     for(int i=0;i<results.size();i++){
@@ -167,15 +160,11 @@ long long* testSets(std::vector<char**> sets){
         }
         foutL << '\n';
     }
-    std::cout << "Results was saved to output.txt\n\n";
 
-    std::cout << "=====BIT ARRAY SET=====\n";
     start = std::chrono::high_resolution_clock::now(); //timer starts
     results = bitArraySet(baset);
     end = std::chrono::high_resolution_clock::now(); //timer stops
     times[2] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
-    std::cout << "Bit array set completed successfully!\n";
-    std::cout <<"RUNTIME: " << times[2] << '\n';
 
     //writing results to the file with bit array set results
     for(int i=0;i<results.size();i++){
@@ -187,15 +176,11 @@ long long* testSets(std::vector<char**> sets){
         }
         foutBa << '\n';
     }
-    std::cout << "Results was saved to output.txt\n\n";
 
-    std::cout << "=====BIT MASK SET=====\n";
     start = std::chrono::high_resolution_clock::now(); //timer starts
     results = bitMaskSet(bmset);
     end = std::chrono::high_resolution_clock::now(); //timer stops
     times[3] = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
-    std::cout << "Bit mask set completed successfully!\n";
-    std::cout <<"RUNTIME: " << times[3] << '\n';
 
     //writing results to the file with bit mask set results
     for(int i=0;i<results.size();i++){
@@ -207,7 +192,6 @@ long long* testSets(std::vector<char**> sets){
         }
         foutBm << '\n';
     }
-    std::cout << "Results was saved to output.txt\n\n";
 
     return times;
 }
@@ -281,7 +265,7 @@ char** inputCharArrays(){
         }else{
             //inputting sets from the keyboard
             std::cout << "Enter size of set " << static_cast<char>('A'+i) << ": ";
-            std::cin >> arrSize; 
+            std::cin >> arrSize;
             arrays[i] = new char[arrSize+1];
             std::cout << "Enter set: ";
             std::cin >> arrays[i];
