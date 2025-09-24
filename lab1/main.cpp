@@ -3,6 +3,7 @@
 #include <string> //for easier work with chars
 #include <sstream> //for easier reading of strings
 #include <chrono> //for work with time
+#include <stdexcept> //for throwing exceptions
 
 #include "array_set.hpp" //realization of set with using an array
 #include "list.hpp" //realization of set with using a list
@@ -21,6 +22,7 @@ char** parseFileLine(const std::string& line); //reads the line of .csv file, re
 void inputFromConsole(); //does the input from the console to input.csv
 std::vector<std::string> inputGroupSet(); //does the input from console to the set group (A, B, C, D)
 int* compareWithSTLset(); //function compares results of 4 set realizations with results of stl set
+bool isValidSet(std::string str); //for checking correctness of the entered set
 
 int main(){
     bool inpFromFile = true; //flag to check if we need to do the input from the file
@@ -63,10 +65,10 @@ int main(){
 
     //outputing runtimes
     std::cout << "=================[RUNTIMES]=================\n";
-    std::cout << "Array: " << time[0] << " ms" <<'\n';
-    std::cout << "List: " << time[1] << " ms" <<'\n';
-    std::cout << "Bit Array: " << time[2] << " ms" <<'\n';
-    std::cout << "Bit Mask: " << time[3] << " ms" <<'\n';
+    std::cout << "Array: " << time[0] << " microsecs" <<'\n';
+    std::cout << "List: " << time[1] << " microsecs" <<'\n';
+    std::cout << "Bit Array: " << time[2] << " microsecs" <<'\n';
+    std::cout << "Bit Mask: " << time[3] << " microsecs" <<'\n';
     std::cout << "============================================\n\n";
 
     testIdolSet(); //doing expected results with stl set
@@ -282,7 +284,7 @@ std::vector<std::string> inputGroupSet(){
     for(int i=0;i<4;i++){
         std::cout << "Set " << static_cast<char>('A'+i) << '\n';
         if(i==0){
-            std::cout << "Fill set A with all latin letters? (y/n): ";
+            std::cout << "Fill the set A with all the latin letters? (y/n): ";
             std::cin >> userChoice;
             if(userChoice=='y'){
                 doFullAlphabet = true;
@@ -294,11 +296,14 @@ std::vector<std::string> inputGroupSet(){
             for(int j=0;j<26;j++){
                 inpSet[j] = 'A'+j;
             }
-            std::cout << "Set A filled with all latin letters\n";
+            std::cout << "Set A filled with all the latin letters\n";
         }else{
             //inputting sets from the keyboard
             std::cout << "Enter set: ";
             std::cin >> inpSet;
+            if(!isValidSet(inpSet)){
+                throw std::invalid_argument("Error: Set must contain only latin uppercase letters!");
+            }
         }
         std::cout << "---------------------------\n";
         groupSet[i] = inpSet;
@@ -347,4 +352,13 @@ int* compareWithSTLset(){
     errors[2] = compareFiles("data/idol_output.txt", "data/outputBa.txt"); //comparing with bit array results
     errors[3] = compareFiles("data/idol_output.txt", "data/outputBm.txt"); //comparing with bit mask results
     return errors;
+}
+
+bool isValidSet(std::string str){
+    for(int i=0; i<str.length();i++){
+        if(!(str[i]>='A' && str[i]<='Z')){
+            return false;
+        }
+    }
+    return true;
 }
