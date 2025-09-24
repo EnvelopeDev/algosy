@@ -25,7 +25,7 @@ int* compareWithSTLset(); //function compares results of 4 set realizations with
 int main(){
     bool inpFromFile = true; //flag to check if we need to do the input from the file
     bool needGenNewTests=true; //flag to check if we need to generate new tests in input.csv
-    std::ifstream fin("input.csv"); //file with generated tests
+    std::ifstream fin("data/input.csv"); //file with generated tests
     char userOpt; //user option
     int* errors; //array of number of errors
     long long* time; //array of runtimes (array, list, bit array, bitmask)
@@ -250,7 +250,7 @@ void inputFromConsole(){
     size_t arrSize; //size of the array
     int numOfTests;
     std::vector<std::string> groupSet; //group of 4 sets (A, B, C, D)
-    ofstream fout("input.csv");
+    ofstream fout("data/input.csv");
 
     std::cout << "Enter number of tests: ";
     std::cin >> numOfTests;
