@@ -80,15 +80,16 @@ int main(){
     std::cout << "Bit Mask: " << errors[3] << '\n';
     std::cout << "============================================\n\n";
 
-    std::ifstream finA("outputAr.txt"); //file with results of array set
-    std::ifstream finL("outputLi.txt"); //file with results of list set
-    std::ifstream finBa("outputBa.txt"); //file with results of Bit array set
-    std::ifstream finBm("outputBm.txt"); //file with results of Bit mask set
+    std::ifstream finA("data/outputAr.txt"); //file with results of array set
+    std::ifstream finL("data/outputLi.txt"); //file with results of list set
+    std::ifstream finBa("data/outputBa.txt"); //file with results of Bit array set
+    std::ifstream finBm("data/outputBm.txt"); //file with results of Bit mask set
     std::string out;
 
     //if the amount of sets is less than 16, it is outputting to the console
     if(sets.size() < 16){
-        std::cout << "=============[OUTPUT]=============\n";
+        std::cout << "==================[OUTPUT]==================\n";
+
         for(int i=0;i<sets.size();i++){
             getline(finA, out);
             setGroup = sets[i];
@@ -104,9 +105,9 @@ int main(){
                 std::cout << '\n';
             }
             std::cout <<"E: "<< out << '\n';
-            std::cout << "---------------------------\n";
+            std::cout << "--------------------------------------------\n";
         }
-        std::cout << "==================================\n";
+        std::cout << "============================================\n";
     }
     return 0;
 }
@@ -116,10 +117,10 @@ long long* testSets(std::vector<char**> sets){
     std::vector<List<char>*> listSets; //vector with tests for listSet() with the lists of a groups of the sets
     std::vector<BitArraySet*> baset; //vector with tests fot bitArraySet() with sets in BitArray Form
     std::vector<BitMask*> bmset; //vector with tests fot bitMaskSet() with sets in BitMask Form
-    std::ofstream foutA("outputAr.txt"); //file with results of array set
-    std::ofstream foutL("outputLi.txt"); //file with results of list set
-    std::ofstream foutBa("outputBa.txt"); //file with results of Bit array set
-    std::ofstream foutBm("outputBm.txt"); //file with results of Bit mask set
+    std::ofstream foutA("data/outputAr.txt"); //file with results of array set
+    std::ofstream foutL("data/outputLi.txt"); //file with results of list set
+    std::ofstream foutBa("data/outputBa.txt"); //file with results of Bit array set
+    std::ofstream foutBm("data/outputBm.txt"); //file with results of Bit mask set
     std::vector<char*> results; //vector with results
 
     auto start = std::chrono::high_resolution_clock::now(); //timer starts
@@ -341,9 +342,9 @@ char** parseFileLine(const std::string& line){
 
 int* compareWithSTLset(){
     int* errors = new int[4]; //allocating memory for array with the number of errors
-    errors[0] = compareFiles("idol_output.txt", "outputAr.txt"); //comparing with array results
-    errors[1] = compareFiles("idol_output.txt", "outputLi.txt"); //comparing with list results
-    errors[2] = compareFiles("idol_output.txt", "outputBa.txt"); //comparing with bit array results
-    errors[3] = compareFiles("idol_output.txt", "outputBm.txt"); //comparing with bit mask results
+    errors[0] = compareFiles("data/idol_output.txt", "data/outputAr.txt"); //comparing with array results
+    errors[1] = compareFiles("data/idol_output.txt", "data/outputLi.txt"); //comparing with list results
+    errors[2] = compareFiles("data/idol_output.txt", "data/outputBa.txt"); //comparing with bit array results
+    errors[3] = compareFiles("data/idol_output.txt", "data/outputBm.txt"); //comparing with bit mask results
     return errors;
 }

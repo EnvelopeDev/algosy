@@ -34,7 +34,7 @@ void generatorInterface(){
 }
 
 void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
-    ofstream fout("input.csv");
+    ofstream fout("data/input.csv");
     //set min and max size of subsets B, C, D (quarter of A sizes)
     size_t minSubSetSize = minSizeA/4 + 1, maxSubSetSize = maxSizeA/4 + 1;
 

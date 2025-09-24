@@ -20,8 +20,8 @@ set<char> subtractSets(const vector<set<char>>& sets){
 }
 
 void testIdolSet(){
-    ifstream inputFile("input.csv");
-    ofstream outputFile("idol_output.txt");
+    ifstream inputFile("data/input.csv");
+    ofstream outputFile("data/idol_output.txt");
     string line;
     
     while(getline(inputFile, line)){
