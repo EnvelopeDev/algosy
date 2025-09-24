@@ -18,7 +18,8 @@ std::vector<char*> listSet(std::vector<List<char>*> sets); //function doing test
 std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets); //function doing tests of bit array set version
 std::vector<char*> bitMaskSet(std::vector<BitMask*> sets); //function doing tests of bit mask set version
 char** parseFileLine(const std::string& line); //reads the line of .csv file, returns a group of 4 sets
-char** inputCharArrays(); //does the input from the console, returns group of 4 sets
+void inputFromConsole(); //does the input from the console to input.csv
+std::vector<std::string> inputGroupSet(); //does the input from console to the set group (A, B, C, D)
 int* compareWithSTLset(); //function compares results of 4 set realizations with results of stl set
 
 int main(){
@@ -32,7 +33,7 @@ int main(){
     std::string line; //line in input.csv to read
     char** setGroup; //group of 4 sets (A, B, C, D)
 
-    std::cout << "Input sets from input.csv?(y/n): ";
+    std::cout << "Use the test generator?(y/n): ";
     std::cin >> userOpt;
     if(userOpt=='n'){
         inpFromFile=false;
@@ -47,16 +48,17 @@ int main(){
         if(needGenNewTests){
             generatorInterface(); //calling generator.cpp to generate new tests
         }
-        //reading input.csv
-        while(getline(fin, line)){
-            setGroup = parseFileLine(line);
-            sets.push_back(setGroup);
-        }
     }
     else{
-        //adding sets inputed from the console
-        sets.push_back(inputCharArrays());
+        //inputting sets from the console
+        inputFromConsole();
     }
+    //reading input.csv
+    while(getline(fin, line)){
+        setGroup = parseFileLine(line);
+        sets.push_back(setGroup);
+    }
+
     time = testSets(sets); //doing tests
 
     //outputing runtimes
@@ -84,23 +86,27 @@ int main(){
     std::ifstream finBm("outputBm.txt"); //file with results of Bit mask set
     std::string out;
 
-    if(sets.size() < 11){
-       for(int i=0;i<sets.size();i++){
-           getline(finA, out);
-           setGroup = sets[i];
-           std::cout << i+1 << " test\n";
-           for(int j=0;j<4;j++){
-               std::cout << static_cast<char>('A'+j) << ": ";
-               for(int l=0; l<strlen(setGroup[j]);l++){
-                   std::cout << setGroup[j][l];
-                   if(l!=strlen(setGroup[j])-1){
-                       std::cout << ", ";
-                   }
-               }
-               std::cout << '\n';
-           }
-           std::cout <<"E: "<< out << "\n\n";
-       }
+    //if the amount of sets is less than 16, it is outputting to the console
+    if(sets.size() < 16){
+        std::cout << "=============[OUTPUT]=============\n";
+        for(int i=0;i<sets.size();i++){
+            getline(finA, out);
+            setGroup = sets[i];
+            std::cout << i+1 << " test\n";
+            for(int j=0;j<4;j++){
+                std::cout << static_cast<char>('A'+j) << ": ";
+                for(int l=0; l<strlen(setGroup[j]);l++){
+                    std::cout << setGroup[j][l];
+                    if(l!=strlen(setGroup[j])-1){
+                        std::cout << ", ";
+                    }
+                }
+                std::cout << '\n';
+            }
+            std::cout <<"E: "<< out << '\n';
+            std::cout << "---------------------------\n";
+        }
+        std::cout << "==================================\n";
     }
     return 0;
 }
@@ -239,42 +245,65 @@ std::vector<char*> bitMaskSet(std::vector<BitMask*> sets){
     return setsRes;
 }
 
-char** inputCharArrays(){
+void inputFromConsole(){
     size_t arrSize; //size of the array
+    int numOfTests;
+    std::vector<std::string> groupSet; //group of 4 sets (A, B, C, D)
+    ofstream fout("input.csv");
+
+    std::cout << "Enter number of tests: ";
+    std::cin >> numOfTests;
+
+    //outputting sets to input.csv
+    for(int i=0;i<numOfTests;i++){
+        std::cout << "\n=========TEST " << i+1 << "=========\n";
+        groupSet = inputGroupSet();
+        for(int j=0;j<4;j++){
+            fout << groupSet[j].length() << ';';
+            for(int l=0;l<groupSet[j].length();l++){
+                fout << groupSet[j][l];
+                if(l!=groupSet[j].length()-1){
+                    fout << ',';
+                }
+            }
+            fout << ';';
+        }
+        fout << '\n';
+    }
+}
+
+std::vector<std::string> inputGroupSet(){
+    //input the sets
     bool doFullAlphabet=false; //flag to check if it`s need to fill the set with all latin letters
     char userChoice;
-    char** arrays = new char*[4]; //allcating memory for the array with the group of the sets
-    //input the sets
+    std::string inpSet;
+    std::vector<std::string> groupSet(4);
     for(int i=0;i<4;i++){
-        std::cout << "___________Set " << static_cast<char>('A'+i) << "___________" <<'\n';
+        std::cout << "Set " << static_cast<char>('A'+i) << '\n';
         if(i==0){
             std::cout << "Fill set A with all latin letters? (y/n): ";
             std::cin >> userChoice;
-            if(userChoice == 'y'){
+            if(userChoice=='y'){
                 doFullAlphabet = true;
             }
         }
         if(doFullAlphabet && i==0){
-            arrays[i] = new char[27];
             //filling the set with all the latin letters
+            inpSet.resize(26);
             for(int j=0;j<26;j++){
-                arrays[i][j] = 'A'+j;
+                inpSet[j] = 'A'+j;
             }
-            arrays[i][26] = '\0';
             std::cout << "Set A filled with all latin letters\n";
         }else{
             //inputting sets from the keyboard
-            std::cout << "Enter size of set " << static_cast<char>('A'+i) << ": ";
-            std::cin >> arrSize;
-            arrays[i] = new char[arrSize+1];
             std::cout << "Enter set: ";
-            std::cin >> arrays[i];
-            arrays[i][arrSize] = '\0';
+            std::cin >> inpSet;
         }
+        std::cout << "---------------------------\n";
+        groupSet[i] = inpSet;
     }
-    return arrays;
+    return groupSet;
 }
-
 
 char** parseFileLine(const std::string& line){
     std::stringstream ss(line); //stream with the line (string)
