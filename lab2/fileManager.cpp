@@ -1,6 +1,6 @@
 #include "fileManager.hpp"
 
-set<string> stringToSet(const string& line) {
+set<string> FileManager::stringToSet(const string& line) {
     set<string> result;
     stringstream ss(line); //openning stream in line
     string item;
@@ -13,7 +13,7 @@ set<string> stringToSet(const string& line) {
     return result;
 }
 
-int compareFiles(const string& filename1, const string& filename2) {
+int FileManager::compareFiles(const string& filename1, const string& filename2) {
     ifstream file1(filename1);
     ifstream file2(filename2);
 
@@ -46,7 +46,7 @@ int compareFiles(const string& filename1, const string& filename2) {
     return diffCount;
 }
 
-vector<set<char>> parseCSVLine(const string& line){
+vector<set<char>> FileManager::parseCSVLine(const string& line){
     vector<set<char>> sets; //container for results
     stringstream ss(line); //stream for parsing the string
     string token; //temporary storage for tokens
