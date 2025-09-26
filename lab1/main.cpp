@@ -15,9 +15,9 @@
 
 long long* testSets(std::vector<char**> sets); //function does tests from vector sets, returning runtimes in microseconds
 std::vector<char*> arraySet(std::vector<char**> sets); //function doing tests of array set version
-std::vector<Node*> listSet(std::vector<std::vector<Node*>> sets); //function doing tests of list set version
-std::vector<bool*> bitArraySet(std::vector<bool**> sets); //function doing tests of bit array set version
-std::vector<unsigned long long> bitMaskSet(std::vector<unsigned long long*> sets); //function doing tests of bit mask set version
+std::vector<char*> listSet(std::vector<std::vector<Node*>> sets); //function doing tests of list set version
+std::vector<char*> bitArraySet(std::vector<bool**> sets); //function doing tests of bit array set version
+std::vector<char*> bitMaskSet(std::vector<unsigned long long*> sets); //function doing tests of bit mask set version
 char** parseFileLine(const std::string& line); //reads the line of .csv file, returns a group of 4 sets
 void inputFromConsole(); //does the input from the console to input.csv
 std::vector<std::string> inputGroupSet(); //does the input from console to the set group (A, B, C, D)
@@ -141,6 +141,8 @@ long long* testSets(std::vector<char**> sets){
         foutA << '\n';
     }
 
+    std::vector<Node*> listSetGroup(4);
+    
     //converting vector with char** to List, BitArraySet, Bitmask vectors
     for(int i=0;i<sets.size();i++){
         
@@ -207,34 +209,34 @@ std::vector<char*> arraySet(std::vector<char**> sets){
     return setsRes;
 }
 
-std::vector<Node*> listSet(std::vector<std::vector<Node*>> sets){
-    std::vector<Node*> setsRes; //resulting array with sets E
+std::vector<char*> listSet(std::vector<std::vector<Node*>> sets){
+    std::vector<char*> setsRes; //resulting array with sets E
     Node* setE;
     for(int i=0; i<sets.size();i++){
         setE=substructSetList(sets[i][0], sets[i][1], sets[i][2], sets[i][3]);
-        setsRes.push_back(setE);
+        setsRes.push_back(toChar(setE));
     }
     return setsRes;
 }
 
-std::vector<bool*> bitArraySet(std::vector<bool**> sets){
+std::vector<char*> bitArraySet(std::vector<bool**> sets){
     std::vector<char*> setsRes; //resulting array with sets E
     bool* setE;
 
     for(int i=0; i<sets.size();i++){
-        setE = sets[i][0].subtractSets(sets[i][1], sets[i][2], sets[i][3]);
-        setsRes.push_back(setE.toDynChar());
+        setE = subtractSets(sets[i][0], sets[i][1], sets[i][2], sets[i][3]);
+        setsRes.push_back(convBitSetToStr(setE));
     }
     return setsRes;
 }
 
-std::vector<unsigned long long> bitMaskSet(std::vector<unsigned long long*> sets){
+std::vector<char*> bitMaskSet(std::vector<unsigned long long*> sets){
     std::vector<char*> setsRes; //resulting array with sets E
-    BitMask setE("");
+    unsigned long long setE;
 
     for(int i=0; i<sets.size();i++){
-        setE = sets[i][0].subtractSets(sets[i][1], sets[i][2], sets[i][3]);
-        setsRes.push_back(setE.toDynChar());
+        setE = subtractBitMaskSets(sets[i][0], sets[i][1], sets[i][2], sets[i][3]);
+        setsRes.push_back(convBitMaskToStr(setE));
     }
     return setsRes;
 }

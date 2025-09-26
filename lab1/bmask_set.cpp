@@ -6,7 +6,7 @@ unsigned long long convStrToBitMask(const char* set){
     for(int i=0; i<strlen(set);i++){
         res = res|(1ULL << (set[i]-'A'));
     }
-    
+    return res;
 }
 unsigned long long subtractBitMaskSets(const unsigned long long A, const unsigned long long B, const unsigned long long C, const unsigned long long D){
     return A & ~(B | C | D);

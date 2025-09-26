@@ -16,6 +16,7 @@ bool* subtractSets(const bool* A, const bool* B, const bool* C, const bool* D){
     for(int i=0; i<POWER_OF_ALPHABET;i++){
         res[i] = A[i] && !(B[i] || C[i] || D[i]);
     }
+    return res;
 }
 char* convBitSetToStr(const bool* set){
     size_t sz=0;
