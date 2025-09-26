@@ -6,7 +6,7 @@ void push_back(Node** head, char value){
     newNode->value=value;
 
     //setting the head if the list is empty
-    if(head==nullptr){
+    if(*head==nullptr){
         *head = newNode;
         return;
     }
@@ -32,7 +32,7 @@ Node* substructSetList(Node* A, Node* B, Node* C, Node* D){
     Node* curr = A; //current node of the main set
     Node* currSubSet=nullptr; //current node of the subsets
     bool flag=true; //flag to check if an element of the main set is not contained in the subsets
-    Node* res = new Node; //allocating memory for the result list
+    Node* res = nullptr; //allocating memory for the result list
     //going through the main set until the end
     while(curr!=nullptr){
         flag=true;
@@ -86,6 +86,14 @@ char* toChar(Node* head){
     for(int i=0;i<sz;i++){
         res[i]=curr->value;
         curr=curr->next;
+    }
+    return res;
+}
+
+Node* toList(char* str){
+    Node* res = nullptr;
+    for(int i=0;i<strlen(str);i++){
+        push_back(&res, str[i]);
     }
     return res;
 }

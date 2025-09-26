@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <stdexcept> //for calling exceptions
+#include "string.h"
 
 struct Node
 {
@@ -13,3 +14,4 @@ void print(Node* head);
 Node* substructSetList(Node* A, Node* B, Node* C, Node* D);
 int listSize(Node* head);
 char* toChar(Node* head);
+Node* toList(char* str);

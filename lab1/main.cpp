@@ -142,12 +142,23 @@ long long* testSets(std::vector<char**> sets){
     }
 
     std::vector<Node*> listSetGroup(4);
-    
+    char** currSet;
+    bool** baSetGroup = new bool*[4];
+    unsigned long long* bmSetGroup = new unsigned long long[4];
     //converting vector with char** to List, BitArraySet, Bitmask vectors
     for(int i=0;i<sets.size();i++){
-        
+        currSet = sets[i];
+        baSetGroup = new bool*[4];
+        bmSetGroup = new unsigned long long[4];
+        for(int j=0;j<4;j++){
+            listSetGroup[j] = toList(currSet[j]);
+            baSetGroup[j] = convStrToBitSet(currSet[j]);
+            bmSetGroup[j] = convStrToBitMask(currSet[j]);
+        }
+        listSets.push_back(listSetGroup);
+        baset.push_back(baSetGroup);
+        bmset.push_back(bmSetGroup);
     }
-
     start = std::chrono::high_resolution_clock::now(); //timer starts
     results = listSet(listSets);
     end = std::chrono::high_resolution_clock::now(); //timer stops
