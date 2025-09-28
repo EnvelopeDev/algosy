@@ -51,7 +51,7 @@ ArraySet::ArraySet(const char* inpSet){
         return;     
     }
     sz=strlen(inpSet);
-    set = new char[sz+1];
+    set = new char[UNIVERSUM_SIZE+1];
     strcpy(set, inpSet);
     removeDuplicates();
 }
@@ -151,8 +151,28 @@ ArraySet& ArraySet::operator&=(const ArraySet& other){
         return *this;
     }
     
+    char* res = new char[UNIVERSUM_SIZE+1];
+    int resSize = 0;
+    bool flag;
 
-
+    for(int i=0;i<this->sz;i++){
+        flag = false;
+        for(int j=0;j<other.sz && !flag;j++){
+            if(this->set[i]==other.set[j]){
+                flag = true;
+            }
+        }
+        if(flag){
+            res[resSize] = this->set[i];
+            resSize++;
+        }
+    }
+    if(set!=nullptr){
+        delete[] set;
+    }
+    set = res;
+    set[resSize] = '\0';
+    sz = resSize;
     return *this;
 }
 
@@ -161,7 +181,9 @@ ArraySet& ArraySet::operator|=(const ArraySet& other){
         return *this;
     }
     
-
+    for(int i=0;i<other.sz;i++){
+        this->insert(other.set[i]);
+    }
 
     return *this;
 }
@@ -181,6 +203,25 @@ ArraySet ArraySet::operator~(){
         }
     }
     return res;
+}
+
+bool ArraySet::operator==(const ArraySet& other){
+    if(this->sz!=other.sz){
+        return false;
+    }
+    bool flag;
+    for(int i=0;i<this->sz;i++){
+        flag = false;
+        for(int j=0;j<other.sz;j++){
+            if(this->set[i]==other.set[j]){
+                flag = true;
+            }
+        }
+        if(!flag){
+            return false;
+        }
+    }
+    return true;
 }
 
 void ArraySet::insert(char ch){
