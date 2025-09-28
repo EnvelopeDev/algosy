@@ -39,14 +39,14 @@ char* subtractionSets(const char* A, const char* B, const char* C, const char* D
 
 ArraySet::ArraySet(){
     sz=0;
-    set = new char[1];
+    set = new char[UNIVERSUM_SIZE+1];
     set[0]='\0';
 }
 
 ArraySet::ArraySet(const char* inpSet){
     if(!inpSet){
         sz=0;
-        set = new char[1];
+        set = new char[UNIVERSUM_SIZE+1];
         set[0]='\0';
         return;     
     }
@@ -58,7 +58,7 @@ ArraySet::ArraySet(const char* inpSet){
 
 ArraySet::ArraySet(const ArraySet& other){
     sz=other.sz;
-    set = new char[sz+1];
+    set = new char[UNIVERSUM_SIZE+1];
     strcpy(set, other.set);
 }
 
@@ -78,7 +78,7 @@ void ArraySet::removeDuplicates(){
         delete[] set;
     }
     
-    set = new char[sz+1];
+    set = new char[UNIVERSUM_SIZE+1];
     set[sz] = '\0';
     initSetWithBitmask(setMask);
 }
@@ -107,6 +107,98 @@ unsigned long long ArraySet::getSetBitmask(){
     }
     sz = newSize;
     return setMask;
+}
+
+ArraySet& ArraySet::operator=(const ArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    sz=other.sz;
+    strcpy(set, other.set);
+    return *this;
+}
+
+ArraySet ArraySet::operator&(const ArraySet& other){
+    ArraySet res;
+    bool flag;
+    
+    for(int i=0;i<this->sz;i++){
+        flag = false;
+        for(int j=0;j<other.sz && !flag;j++){
+            if(this->set[i]==other.set[j]){
+                flag = true;
+            }
+        }
+        if(flag){
+            res.insert(this->set[i]);
+        }
+    }
+
+    return res;
+}
+
+ArraySet ArraySet::operator|(const ArraySet& other){
+    ArraySet res;
+    res = *this;
+    for(int i=0;i<other.sz;i++){
+        res.insert(other.set[i]);
+    }
+    return res;
+}
+
+ArraySet& ArraySet::operator&=(const ArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    
+
+
+    return *this;
+}
+
+ArraySet& ArraySet::operator|=(const ArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    
+
+
+    return *this;
+}
+
+ArraySet ArraySet::operator~(){
+    ArraySet res;
+    bool flag;
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        flag=true;
+        for(int j=0;j<sz&&flag;j++){
+            if('A'+i==set[j]){
+                flag=false;
+            }
+        }
+        if(flag){
+            res.insert('A'+i);
+        }
+    }
+    return res;
+}
+
+void ArraySet::insert(char ch){
+    if(sz==26){
+        return;
+    }
+
+    bool flag=true;
+    for(int i=0;i<sz && flag;i++){
+        if(set[i]==ch){
+            flag=false;
+        }
+    }
+    if(flag){
+        set[sz]=ch;
+        sz++;
+        set[sz]='\0';
+    }
 }
 
 void ArraySet::print(){

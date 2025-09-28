@@ -30,5 +30,5 @@ public:
     char* toChar();
     std::string toString();
     void print();
-    void insert();
+    void insert(char ch);
 };
