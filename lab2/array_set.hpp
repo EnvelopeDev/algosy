@@ -3,17 +3,11 @@
 #include <string>
 #include <cstring>
 
-//function that subtracts sets B, C, D from set A
-char* subtractionSets(const char* A, const char* B, const char* C, const char* D);
-
 class ArraySet{
 private:
     char* set;
     static const std::size_t UNIVERSUM_SIZE = 26;
     std::size_t sz;
-    void removeDuplicates();
-    void initSetWithBitmask(const unsigned long long mask);
-    unsigned long long getSetBitmask();
 public:
     ArraySet();
     ArraySet(const char* inpSet);
@@ -31,4 +25,8 @@ public:
     std::string toString();
     void print();
     void insert(char ch);
+    void remove(char ch);
+    void remove(int removeIndex);
+    bool constains(char ch);
+    void clear();
 };

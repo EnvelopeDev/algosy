@@ -1,15 +1,16 @@
 #include <iostream>
 #include "array_set.hpp"
+#include "listSet.hpp"
 using namespace std;
 
 int main()
 {
-    ArraySet set1, set2("AABCCDEFGHIM"), set3("ABCDEFGHIN");
+    ListSet set1, set2("AABCCDEFGHI"), set3("ABCDEFGHI");
     set2.print();
     std::cout << set2.getSize() << '\n';
     set3.print();
     std::cout  << set3.getSize() << '\n';
-    ArraySet set4(set2);
+    ListSet set4(set2);
     set4.print();
     std::cout  << set4.getSize() << '\n';
     for(int i=0;i<26;i++){
@@ -28,5 +29,16 @@ int main()
     if(bl){
         cout << "ok\n";
     }
+    set2.remove('A');
+    set2.print(); cout << ' ' << set2.getSize() << '\n';
+    set2.remove('D');
+    set2.print(); cout << ' ' << set2.getSize() << '\n';
+    set2.remove(3);
+    set2.print(); cout << ' ' << set2.getSize() << '\n';
+    set2.clear();
+    set2.print(); cout << ' ' << set2.getSize() << '\n';
+    set2.insert('A');
+    
+    set2.print(); cout << ' ' << set2.getSize() << '\n';
     return 0;
 }
