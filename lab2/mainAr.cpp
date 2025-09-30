@@ -24,6 +24,7 @@ int main()
     }
     set1.print(); std::cout << '\n';//cout << set1.getSize() << '\n';
     set1 = ~set3;
+    set1 = set2 | set3;
     set1.print();std::cout << '\n'; //cout << set1.getSize() << '\n';
     set1 &= set2;
     set1.print(); std::cout << '\n';//cout << set1.getSize() << '\n';

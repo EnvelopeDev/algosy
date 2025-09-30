@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <string>
 
 class ListSet{
 private:
@@ -27,19 +27,20 @@ public:
     ListSet(const char* inpSet);
     ListSet(const ListSet& other);
     ~ListSet();
-    ListSet operator|(const ListSet& other);
-    ListSet operator&(const ListSet& other);
+    ListSet operator|(const ListSet& other)const;
+    ListSet operator&(const ListSet& other)const;
     ListSet& operator=(const ListSet& other);
     ListSet& operator|=(const ListSet& other);
     ListSet& operator&=(const ListSet& other);
-    ListSet operator~();
-    bool operator==(const ListSet& other);
-    std::size_t getSize();
-    char* toChar();
-    std::string toString();
-    void print();
+    ListSet operator~()const;
+    bool operator==(const ListSet& other)const;
+    ListSet subtractSets(const ListSet& B, const ListSet& C, const ListSet& D)const;
+    std::size_t getSize()const;
+    char* toChar()const;
+    std::string toString()const;
+    void print()const;
     void insert(char ch);
     void remove(char ch);
-    bool constains(char ch);
+    bool contains(char ch)const;
     void clear();
 };

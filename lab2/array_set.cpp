@@ -40,7 +40,7 @@ ArraySet& ArraySet::operator=(const ArraySet& other){
     return *this;
 }
 
-ArraySet ArraySet::operator&(const ArraySet& other){
+ArraySet ArraySet::operator&(const ArraySet& other)const{
     ArraySet res;
     bool flag;
     
@@ -59,7 +59,7 @@ ArraySet ArraySet::operator&(const ArraySet& other){
     return res;
 }
 
-ArraySet ArraySet::operator|(const ArraySet& other){
+ArraySet ArraySet::operator|(const ArraySet& other)const{
     ArraySet res;
     res = *this;
     for(int i=0;i<other.sz;i++){
@@ -110,7 +110,7 @@ ArraySet& ArraySet::operator|=(const ArraySet& other){
     return *this;
 }
 
-ArraySet ArraySet::operator~(){
+ArraySet ArraySet::operator~()const{
     ArraySet res;
     bool flag;
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -127,7 +127,7 @@ ArraySet ArraySet::operator~(){
     return res;
 }
 
-bool ArraySet::operator==(const ArraySet& other){
+bool ArraySet::operator==(const ArraySet& other)const{
     if(this->sz!=other.sz){
         return false;
     }
@@ -144,6 +144,11 @@ bool ArraySet::operator==(const ArraySet& other){
         }
     }
     return true;
+}
+
+ArraySet ArraySet::subtractSets(const ArraySet& B, const ArraySet& C, const ArraySet& D)const{
+    ArraySet resSet = *this & ~(B | C | D);
+    return resSet;
 }
 
 void ArraySet::insert(char ch){
@@ -185,7 +190,16 @@ void ArraySet::remove(char ch){
     sz--;
 }
 
-void ArraySet::print(){
+bool ArraySet::contains(char ch)const{
+    for(int i=0;i<sz;i++){
+        if(set[i]==ch){
+            return true;
+        }
+    }
+    return false;
+}
+
+void ArraySet::print()const{
     for(int i=0;i<sz;i++){
         std::cout << set[i];
         if(i!=sz-1){
@@ -194,18 +208,18 @@ void ArraySet::print(){
     }
 }
 
-char* ArraySet::toChar(){
+char* ArraySet::toChar()const{
     char* res = new char[sz+1];
     strcpy(res, set);
     return res;
 }
 
-std::string ArraySet::toString(){
+std::string ArraySet::toString()const{
     std::string res(set);
     return res;
 }
 
-std::size_t ArraySet::getSize(){
+std::size_t ArraySet::getSize()const{
     return sz;
 }
 

@@ -6,7 +6,7 @@
 #include <stdexcept> //for throwing exceptions
 
 #include "array_set.hpp" //realization of set with using an array
-#include "list.hpp" //realization of set with using a list
+#include "listSet.hpp" //realization of set with using a list
 #include "barray_set.hpp" //realization of set with using a bit array
 #include "bmask_set.hpp" //realization of set with using a bit mask
 #include "generator.hpp" //generation of test cases (groups of 4 sets - A, B, C, D)
@@ -14,10 +14,10 @@
 #include "idol_test.hpp" //to create expected results (stl set)
 
 long long* testSets(std::vector<char**> sets); //function does tests from vector sets, returning runtimes in microseconds
-std::vector<char*> arraySet(std::vector<char**> sets); //function doing tests of array set version
-std::vector<char*> listSet(std::vector<List<char>*> sets); //function doing tests of list set version
+std::vector<char*> arraySet(std::vector<ArraySet*> sets); //function doing tests of array set version
+std::vector<char*> listSet(std::vector<ListSet*> sets); //function doing tests of list set version
 std::vector<char*> bitArraySet(std::vector<BitArraySet*> sets); //function doing tests of bit array set version
-std::vector<char*> bitMaskSet(std::vector<BitMask*> sets); //function doing tests of bit mask set version
+std::vector<char*> bitMaskSet(std::vector<BitMaskSet*> sets); //function doing tests of bit mask set version
 char** parseFileLine(const std::string& line); //reads the line of .csv file, returns a group of 4 sets
 void inputFromConsole(); //does the input from the console to input.csv
 std::vector<std::string> inputGroupSet(); //does the input from console to the set group (A, B, C, D)

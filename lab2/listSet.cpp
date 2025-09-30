@@ -48,7 +48,7 @@ ListSet& ListSet::operator=(const ListSet& other){
     return *this;
 }
 
-ListSet ListSet::operator&(const ListSet& other){
+ListSet ListSet::operator&(const ListSet& other)const{
     ListSet res;
     bool flag;
     Node* currThis = this->head, *currOther = other.head;
@@ -70,7 +70,7 @@ ListSet ListSet::operator&(const ListSet& other){
     return res;
 }
 
-ListSet ListSet::operator|(const ListSet& other){
+ListSet ListSet::operator|(const ListSet& other)const{
     ListSet res;
     res = *this;
     Node* curr = other.head;
@@ -123,7 +123,7 @@ ListSet& ListSet::operator|=(const ListSet& other){
     return *this;
 }
 
-ListSet ListSet::operator~(){
+ListSet ListSet::operator~()const{
     ListSet res;
     bool flag;
     Node* curr = head;
@@ -143,7 +143,7 @@ ListSet ListSet::operator~(){
     return res;
 }
 
-bool ListSet::operator==(const ListSet& other){
+bool ListSet::operator==(const ListSet& other)const{
     if(this->sz!=other.sz){
         return false;
     }
@@ -164,6 +164,11 @@ bool ListSet::operator==(const ListSet& other){
         currThis = currThis->next;
     }
     return true;
+}
+
+ListSet ListSet::subtractSets(const ListSet& B, const ListSet& C, const ListSet& D)const{
+    ListSet resSet = *this & ~(B | C | D);
+    return resSet;
 }
 
 void ListSet::insert(char ch){
@@ -224,7 +229,7 @@ void ListSet::remove(char ch){
     }
 }
 
-void ListSet::print(){
+void ListSet::print()const{
     Node* curr = head;
     for(int i=0;i<sz;i++){
         std::cout << curr->value;
@@ -235,7 +240,18 @@ void ListSet::print(){
     }
 }
 
-char* ListSet::toChar(){
+bool ListSet::contains(char ch)const{
+    Node* curr = head;
+    for(int i=0;i<sz;i++){
+        if(curr->value==ch){
+            return true;
+        }
+        curr=curr->next;
+    }
+    return false;
+}
+
+char* ListSet::toChar()const{
     char* res = new char[sz+1];
     Node* curr = head;
     for(int i=0;i<sz;i++){
@@ -246,12 +262,12 @@ char* ListSet::toChar(){
     return res;
 }
 
-std::string ListSet::toString(){
+std::string ListSet::toString()const{
     std::string res(toChar());
     return res;
 }
 
-std::size_t ListSet::getSize(){
+std::size_t ListSet::getSize()const{
     return sz;
 }
 

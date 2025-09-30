@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <string>
 
 class BitArraySet{
 private:
@@ -13,18 +13,19 @@ public:
     BitArraySet(const char* inpSet);
     BitArraySet(const BitArraySet& other);
     ~BitArraySet();
-    BitArraySet operator|(const BitArraySet& other);
-    BitArraySet operator&(const BitArraySet& other);
+    BitArraySet operator|(const BitArraySet& other)const;
+    BitArraySet operator&(const BitArraySet& other)const;
     BitArraySet& operator=(const BitArraySet& other);
     BitArraySet& operator|=(const BitArraySet& other);
     BitArraySet& operator&=(const BitArraySet& other);
-    BitArraySet operator~();
-    bool operator==(const BitArraySet& other);
-    char* toChar();
-    std::string toString();
-    void print();
+    BitArraySet operator~()const;
+    bool operator==(const BitArraySet& other)const;
+    BitArraySet subtractSets(const BitArraySet& B, const BitArraySet& C, const BitArraySet& D)const;
+    char* toChar()const;
+    std::string toString()const;
+    void print()const;
     void insert(char ch);
     void remove(char ch);
-    bool constains(char ch);
+    bool contains(char ch)const;
     void clear();
 };

@@ -49,7 +49,7 @@ BitArraySet& BitArraySet::operator=(const BitArraySet& other){
     return *this;
 }
 
-BitArraySet BitArraySet::operator&(const BitArraySet& other){
+BitArraySet BitArraySet::operator&(const BitArraySet& other)const{
     BitArraySet res;
     
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -58,7 +58,7 @@ BitArraySet BitArraySet::operator&(const BitArraySet& other){
     return res;
 }
 
-BitArraySet BitArraySet::operator|(const BitArraySet& other){
+BitArraySet BitArraySet::operator|(const BitArraySet& other)const{
     BitArraySet res;
     
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -89,7 +89,7 @@ BitArraySet& BitArraySet::operator|=(const BitArraySet& other){
     return *this;
 }
 
-BitArraySet BitArraySet::operator~(){
+BitArraySet BitArraySet::operator~()const{
     BitArraySet res;
     
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -98,7 +98,7 @@ BitArraySet BitArraySet::operator~(){
     return res;
 }
 
-bool BitArraySet::operator==(const BitArraySet& other){
+bool BitArraySet::operator==(const BitArraySet& other)const{
     for(int i=0;i<UNIVERSUM_SIZE;i++){
         if(this->set[i]!=other.set[i]){
             return false;
@@ -111,11 +111,20 @@ void BitArraySet::insert(char ch){
     set[ch-'A'] = true;
 }
 
+BitArraySet BitArraySet::subtractSets(const BitArraySet& B, const BitArraySet& C, const BitArraySet& D)const{
+    BitArraySet resSet = *this & ~(B | C | D);
+    return resSet;
+}
+
 void BitArraySet::remove(char ch){
     set[ch-'A'] = false;
 }
 
-void BitArraySet::print(){
+bool BitArraySet::contains(char ch)const{
+    return set[ch-'A'];
+}
+
+void BitArraySet::print()const{
     char* strSet = toChar();
     for(int i=0;i<strlen(strSet);i++){
         std::cout << strSet[i];
@@ -125,7 +134,7 @@ void BitArraySet::print(){
     }
 }
 
-char* BitArraySet::toChar(){
+char* BitArraySet::toChar()const{
     char* res = new char[UNIVERSUM_SIZE+1];
     int resSize=0;
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -138,7 +147,7 @@ char* BitArraySet::toChar(){
     return res;
 }
 
-std::string BitArraySet::toString(){
+std::string BitArraySet::toString()const{
     std::string res(toChar());
     return res;
 }

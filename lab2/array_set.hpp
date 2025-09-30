@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <string>
 
 class ArraySet{
 private:
@@ -13,19 +13,20 @@ public:
     ArraySet(const char* inpSet);
     ArraySet(const ArraySet& other);
     ~ArraySet();
-    ArraySet operator|(const ArraySet& other);
-    ArraySet operator&(const ArraySet& other);
+    ArraySet operator|(const ArraySet& other)const;
+    ArraySet operator&(const ArraySet& other)const;
     ArraySet& operator=(const ArraySet& other);
     ArraySet& operator|=(const ArraySet& other);
     ArraySet& operator&=(const ArraySet& other);
-    ArraySet operator~();
-    bool operator==(const ArraySet& other);
-    std::size_t getSize();
-    char* toChar();
-    std::string toString();
-    void print();
+    ArraySet operator~()const;
+    bool operator==(const ArraySet& other)const;
+    ArraySet subtractSets(const ArraySet& B, const ArraySet& C, const ArraySet& D)const;
+    std::size_t getSize()const;
+    char* toChar()const;
+    std::string toString()const;
+    void print()const;
     void insert(char ch);
     void remove(char ch);
-    bool constains(char ch);
+    bool contains(char ch)const;
     void clear();
 };

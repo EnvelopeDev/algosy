@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <cstring>
+#include <string>
 
 class BitMaskSet{
 private:
@@ -12,18 +12,19 @@ public:
     BitMaskSet(const char* inpSet);
     BitMaskSet(const BitMaskSet& other);
     ~BitMaskSet();
-    BitMaskSet operator|(const BitMaskSet& other);
-    BitMaskSet operator&(const BitMaskSet& other);
+    BitMaskSet operator|(const BitMaskSet& other)const;
+    BitMaskSet operator&(const BitMaskSet& other)const;
     BitMaskSet& operator=(const BitMaskSet& other);
     BitMaskSet& operator|=(const BitMaskSet& other);
     BitMaskSet& operator&=(const BitMaskSet& other);
-    BitMaskSet operator~();
-    bool operator==(const BitMaskSet& other);
-    char* toChar();
-    std::string toString();
-    void print();
+    BitMaskSet operator~()const;
+    bool operator==(const BitMaskSet& other)const;
+    BitMaskSet subtractSets(const BitMaskSet& B, const BitMaskSet& C, const BitMaskSet& D)const;
+    char* toChar()const;
+    std::string toString()const;
+    void print()const;
     void insert(char ch);
     void remove(char ch);
-    bool constains(char ch);
+    bool contains(char ch)const;
     void clear();
 };
