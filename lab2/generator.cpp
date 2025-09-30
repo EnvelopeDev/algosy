@@ -6,7 +6,7 @@ using namespace std;
 random_device rd;
 mt19937 rng(rd());
 
-void generatorInterface(){
+void Generator::generatorInterface(){
     cout << "\n==============[TEST GENERATOR]==============\n";
     int numArrays;
     size_t minSizeA, maxSizeA;
@@ -33,7 +33,7 @@ void generatorInterface(){
     cout << "============================================\n\n";
 }
 
-void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
+void Generator::generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
     ofstream fout("data/input.csv");
     //set min and max size of subsets B, C, D (quarter of A sizes)
     size_t minSubSetSize = minSizeA/4 + 1, maxSubSetSize = maxSizeA/4 + 1;
@@ -76,7 +76,7 @@ void generateArraysToCSV(int numArrays, size_t minSizeA, size_t maxSizeA){
     delete[] set;
 }
 
-void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLetters){
+void Generator::generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLetters){
     //fill the set with all the alphabet and return the function
     if(fillWithAllLetters){
         for(int i=0;i<MAX_SET_SIZE;i++){
@@ -147,6 +147,6 @@ void generateSet(char* set, size_t minSize, size_t maxSize, bool fillWithAllLett
     }
 }
 
-int randomInt(int min, int max){
+int Generator::randomInt(int min, int max){
     return (rng()%(max+1-min))+min;
 }

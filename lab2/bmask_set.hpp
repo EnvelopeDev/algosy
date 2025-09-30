@@ -1,16 +1,30 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <cstring>
-const int ALPHABET_SIZE = 26;
+#include <string>
 
-class BitMask {
+class BitMaskSet{
 private:
-    unsigned long long mask;
+    unsigned long long set;
+    static const std::size_t UNIVERSUM_SIZE = 26;
 public:
-    BitMask(const char* elements); //constructor with parameter (array of chars)
-    void addElement(char element); //Function adds element into set
-    std::string toString(); //Function converts a set into a string
-    char* toDynChar(); //converting the bit mask to array
-    BitMask subtractSets(const BitMask& B, const BitMask& C, const BitMask& D); //E = A AND NOT(B OR C OR D)
+    BitMaskSet();
+    BitMaskSet(const char* inpSet);
+    BitMaskSet(const BitMaskSet& other);
+    ~BitMaskSet();
+    BitMaskSet operator|(const BitMaskSet& other)const;
+    BitMaskSet operator&(const BitMaskSet& other)const;
+    BitMaskSet& operator=(const BitMaskSet& other);
+    BitMaskSet& operator|=(const BitMaskSet& other);
+    BitMaskSet& operator&=(const BitMaskSet& other);
+    BitMaskSet operator~()const;
+    bool operator==(const BitMaskSet& other)const;
+    BitMaskSet subtractSets(const BitMaskSet& B, const BitMaskSet& C, const BitMaskSet& D)const;
+    char* toChar()const;
+    std::string toString()const;
+    void print()const;
+    void insert(char ch);
+    void remove(char ch);
+    bool contains(char ch)const;
+    void clear();
 };
