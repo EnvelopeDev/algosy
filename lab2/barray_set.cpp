@@ -1,53 +1,148 @@
 #include "barray_set.hpp"
 
-BitArraySet::BitArraySet(const char* elements){
-    bits = new bool[POWER_OF_ALPHABET];
-    for(int i=0;i<POWER_OF_ALPHABET;i++){
-        bits[i]=false;
+void BitArraySet::fillSet(bool* other){
+    if(!other){
+        for(int i=0;i<UNIVERSUM_SIZE;i++){
+            set[i]=false;
+        }
+        return;    
     }
-    //entering array elements (converting from char* to vector<bool>)
-    if(elements != nullptr){
-        size_t length = strlen(elements);
-        if(length > 0){
-            for(int i = 0; i < length; i++){
-                addElement(elements[i]);
-            }
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        set[i]=other[i];
+    }
+}
+
+BitArraySet::BitArraySet(){
+    set = new bool[UNIVERSUM_SIZE];
+    fillSet();
+}
+
+BitArraySet::BitArraySet(const char* inpSet){
+    if(!inpSet){
+        set = new bool[UNIVERSUM_SIZE];
+        fillSet();
+        return;     
+    }
+    set = new bool[UNIVERSUM_SIZE];
+    fillSet();
+    for(int i=0;i<strlen(inpSet);i++){
+        set[inpSet[i]-'A'] = true;
+    }
+}
+
+BitArraySet::BitArraySet(const BitArraySet& other){
+    set = new bool[UNIVERSUM_SIZE];
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        this->set[i] = other.set[i];
+    }
+}
+
+BitArraySet::~BitArraySet(){
+    delete[] set;
+}
+
+BitArraySet& BitArraySet::operator=(const BitArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    this->fillSet(other.set);
+    return *this;
+}
+
+BitArraySet BitArraySet::operator&(const BitArraySet& other){
+    BitArraySet res;
+    
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        res.set[i] = this->set[i] && other.set[i];
+    }
+    return res;
+}
+
+BitArraySet BitArraySet::operator|(const BitArraySet& other){
+    BitArraySet res;
+    
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        res.set[i] = this->set[i] || other.set[i];
+    }
+    return res;
+}
+
+BitArraySet& BitArraySet::operator&=(const BitArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        this->set[i] = this->set[i] && other.set[i];
+    }
+    return *this;
+}
+
+BitArraySet& BitArraySet::operator|=(const BitArraySet& other){
+    if(&other==this){
+        return *this;
+    }
+    
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        this->set[i] = this->set[i] || other.set[i];
+    }
+    return *this;
+}
+
+BitArraySet BitArraySet::operator~(){
+    BitArraySet res;
+    
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        res.set[i] = !this->set[i];
+    }
+    return res;
+}
+
+bool BitArraySet::operator==(const BitArraySet& other){
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        if(this->set[i]!=other.set[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+void BitArraySet::insert(char ch){
+    set[ch-'A'] = true;
+}
+
+void BitArraySet::remove(char ch){
+    set[ch-'A'] = false;
+}
+
+void BitArraySet::print(){
+    char* strSet = toChar();
+    for(int i=0;i<strlen(strSet);i++){
+        std::cout << strSet[i];
+        if(i!=strlen(strSet)-1){
+            std::cout << ", ";
         }
     }
 }
 
-void BitArraySet::addElement(char element) {
-    int index = element - 'A';
-    if (index >= 0 && index < POWER_OF_ALPHABET) {
-        bits[index] = true;
+char* BitArraySet::toChar(){
+    char* res = new char[UNIVERSUM_SIZE+1];
+    int resSize=0;
+    for(int i=0;i<UNIVERSUM_SIZE;i++){
+        if(set[i]){
+            res[resSize] = 'A'+i;
+            resSize++;
+        }
     }
-}
-
-BitArraySet BitArraySet::subtractSets(const BitArraySet& B, const BitArraySet& C, const BitArraySet& D){
-    BitArraySet result(""); //init empty result array
-    for(int i = 0; i < POWER_OF_ALPHABET; i++){
-        bool unionBCD = B.bits[i] || C.bits[i] || D.bits[i];//applies the operation union
-        result.bits[i] = this->bits[i] && !unionBCD; //applies the operations (AND, NOT)
-    }
-    return result;
+    res[resSize]='\0';
+    return res;
 }
 
 std::string BitArraySet::toString(){
-    std::string result;
-    for(int i = 0; i < POWER_OF_ALPHABET; i++){
-        if(bits[i]){
-            result += 'A' + i; //finding element and add it into string
-        }
-    }
-    return result;
+    std::string res(toChar());
+    return res;
 }
 
-char* BitArraySet::toDynChar(){
-    std::string set = this->toString();
-    char* res = new char[set.length()+1];
-    for(int i=0;i<set.length();i++){
-        res[i] = set[i];
-    }
-    res[set.length()] = '\0';
-    return res;
+void BitArraySet::clear(){
+    fillSet();
 }
