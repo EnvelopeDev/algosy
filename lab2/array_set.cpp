@@ -185,17 +185,6 @@ void ArraySet::remove(char ch){
     sz--;
 }
 
-void ArraySet::remove(int removeIndex){
-    if(sz==0 || removeIndex >= sz){
-        return;
-    }
-
-    for(int i=removeIndex;i<sz+1;i++){
-        set[i] = set[i+1];
-    }
-    sz--;
-}
-
 void ArraySet::print(){
     for(int i=0;i<sz;i++){
         std::cout << set[i];

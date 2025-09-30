@@ -40,7 +40,6 @@ public:
     void print();
     void insert(char ch);
     void remove(char ch);
-    void remove(int removeIndex);
     bool constains(char ch);
     void clear();
 };

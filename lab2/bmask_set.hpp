@@ -2,58 +2,28 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-const int ALPHABET_SIZE = 26;
 
-class BitMask {
+class BitMaskSet{
 private:
-    unsigned long long mask;
+    unsigned long long set;
+    static const std::size_t UNIVERSUM_SIZE = 26;
 public:
-    BitMask(const char* elements); //constructor with parameter (array of chars)
-    void addElement(char element); //Function adds element into set
-    std::string toString(); //Function converts a set into a string
-    char* toDynChar(); //converting the bit mask to array
-    BitMask subtractSets(const BitMask& B, const BitMask& C, const BitMask& D); //E = A AND NOT(B OR C OR D)
+    BitMaskSet();
+    BitMaskSet(const char* inpSet);
+    BitMaskSet(const BitMaskSet& other);
+    ~BitMaskSet();
+    BitMaskSet operator|(const BitMaskSet& other);
+    BitMaskSet operator&(const BitMaskSet& other);
+    BitMaskSet& operator=(const BitMaskSet& other);
+    BitMaskSet& operator|=(const BitMaskSet& other);
+    BitMaskSet& operator&=(const BitMaskSet& other);
+    BitMaskSet operator~();
+    bool operator==(const BitMaskSet& other);
+    char* toChar();
+    std::string toString();
+    void print();
+    void insert(char ch);
+    void remove(char ch);
+    bool constains(char ch);
+    void clear();
 };
-
-/*void ArraySet::removeDuplicates(){
-    size_t oldSize = sz;
-    unsigned long long setMask=getSetBitmask();
-
-    if(oldSize==sz){
-        return;
-    }
-    
-    if(set!=nullptr){
-        delete[] set;
-    }
-    
-    set = new char[UNIVERSUM_SIZE+1];
-    set[sz] = '\0';
-    initSetWithBitmask(setMask);
-}
-
-void ArraySet::initSetWithBitmask(const unsigned long long setMask){
-    unsigned long long mask;
-    int currSize=0;
-    for(int i=0;i<UNIVERSUM_SIZE;i++){
-        mask = 1ULL << i;
-        if(setMask & mask){
-            set[currSize] = 'A'+i;
-            currSize++;
-        }
-    }
-}
-
-unsigned long long ArraySet::getSetBitmask(){
-    unsigned long long setMask = 0ULL, mask;
-    size_t newSize=0;
-    for(int i=0;i<sz;i++){
-        mask = 1ULL<<(set[i]-'A');
-        if(!(setMask & mask)){
-            newSize++;
-            setMask |= mask;
-        }
-    }
-    sz = newSize;
-    return setMask;
-}*/

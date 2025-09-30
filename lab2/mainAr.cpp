@@ -2,17 +2,17 @@
 #include "array_set.hpp"
 #include "listSet.hpp"
 #include "barray_set.hpp"
-//#include "bmask_set.hpp"
+#include "bmask_set.hpp"
 using namespace std;
 
 int main()
 {
-    ArraySet set1, set2("AABCCDEFGHI"), set3("ABCDEFGHI");
+    BitMaskSet set1, set2("AABCCDEFGHI"), set3("ABCDEFGHI");
     set2.print(); std::cout << '\n';
     //std::cout << set2.getSize() << '\n';
     set3.print();std::cout << '\n';
     //std::cout  << set3.getSize() << '\n';
-    ArraySet set4(set2);
+    BitMaskSet set4(set2);
     set4.print();std::cout << '\n';
     //std::cout  << set4.getSize() << '\n';
     for(int i=0;i<26;i++){
@@ -35,7 +35,6 @@ int main()
     set2.print();std::cout << '\n'; //cout << ' ' << set2.getSize() << '\n';
     set2.remove('D');
     set2.print();std::cout << '\n'; //cout << ' ' << set2.getSize() << '\n';
-    set2.remove(3);
     set2.print(); std::cout << '\n';//cout << ' ' << set2.getSize() << '\n';
     set2.clear();
     set2.print(); std::cout << '\n';//cout << ' ' << set2.getSize() << '\n';

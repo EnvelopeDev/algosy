@@ -224,34 +224,6 @@ void ListSet::remove(char ch){
     }
 }
 
-void ListSet::remove(int removeIndex){
-    if(sz==0 || removeIndex >= sz){
-        return;
-    }
-    if(removeIndex==0){
-        Node* temp = head;
-        head = temp->next;
-        if(sz<=2){
-            end=head;
-        }
-        delete temp;
-        sz--;
-        return;
-    }
-
-    Node* curr = head, *temp;
-    for(int i=0;i<removeIndex-1;i++){
-        curr = curr->next;
-    }
-    if(curr->next==end){
-        end=curr;
-    }
-    temp = curr->next;
-    curr->next = temp->next;
-    delete temp;
-    sz--;
-}
-
 void ListSet::print(){
     Node* curr = head;
     for(int i=0;i<sz;i++){
