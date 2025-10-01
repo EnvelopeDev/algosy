@@ -29,6 +29,7 @@ int main(){
     bool needGenNewTests=true; //flag to check if we need to generate new tests in input.csv
     std::ifstream fin("data/input.csv"); //file with generated tests
     char userOpt; //user option
+    long long totalRuntime;
     int* errors; //array of number of errors
     long long* time; //array of runtimes (array, list, bit array, bitmask)
     std::vector<char**> sets; //sets from input.csv
@@ -55,6 +56,8 @@ int main(){
         //inputting sets from the console
         inputFromConsole();
     }
+
+    auto start = std::chrono::high_resolution_clock::now(); //timer starts
     //reading input.csv
     while(getline(fin, line)){
         setGroup = parseFileLine(line);
@@ -111,6 +114,9 @@ int main(){
         }
         std::cout << "============================================\n";
     }
+    auto end = std::chrono::high_resolution_clock::now(); //timer stops
+    totalRuntime = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); //counting runtime in microseconds
+    std::cout << "TOTAL PROGRAM RUNTIME: " << totalRuntime << " microseconds" << '\n';
     return 0;
 }
 
