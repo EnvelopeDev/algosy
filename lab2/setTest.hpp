@@ -24,7 +24,6 @@ private:
     set<char> subtractSets(const vector<set<char>>& sets); //function that does a subtraction of sets B, C, D from set A
     void testIdolSet(); //does the expected results with using the stl set
     void compareWithSTLset();
-    
 public:
     SetTest(std::vector<char**> sets);
     ~SetTest();

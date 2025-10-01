@@ -1,16 +1,24 @@
 #include "array_set.hpp"
 
+int ArraySet::setCounter = 0;
+
 ArraySet::ArraySet(){
+    if(setCounter < 10) std::cout << "ArraySet::ArraySet() - default constructor" << std::endl;
     sz=0;
     set = new char[UNIVERSUM_SIZE+1];
     set[0]='\0';
+    setCounter++;
+    if(setCounter < 10) std::cout << "Active ArraySet instances: " << setCounter << std::endl;
 }
 
 ArraySet::ArraySet(const char* inpSet){
+    if(setCounter < 10) std::cout << "ArraySet::ArraySet(const char* inpSet) - constructor from char array" << std::endl;
     if(!inpSet){
         sz=0;
         set = new char[UNIVERSUM_SIZE+1];
         set[0]='\0';
+        setCounter++;
+        if(setCounter < 10) std::cout << "Active ArraySet instances: " << setCounter << std::endl;
         return;     
     }
     sz=0;
@@ -19,19 +27,28 @@ ArraySet::ArraySet(const char* inpSet){
         insert(inpSet[i]);
     }
     set[sz]='\0';
+    setCounter++;
+    if(setCounter < 10) std::cout << "Active ArraySet instances: " << setCounter << std::endl;
 }
 
 ArraySet::ArraySet(const ArraySet& other){
+    if(setCounter < 10) std::cout << "ArraySet::ArraySet(const ArraySet& other) - copy constructor" << std::endl;
     sz=other.sz;
     set = new char[UNIVERSUM_SIZE+1];
     strcpy(set, other.set);
+    setCounter++;
+    if(setCounter < 10) std::cout << "Active ArraySet instances: " << setCounter << std::endl;
 }
 
 ArraySet::~ArraySet(){
+    if(setCounter < 10) std::cout << "ArraySet::~ArraySet() - destructor" << std::endl;
     delete[] set;
+    setCounter--;
+    if(setCounter < 10) std::cout << "Active ArraySet instances: " << setCounter << std::endl;
 }
 
 ArraySet& ArraySet::operator=(const ArraySet& other){
+    if(setCounter < 10) std::cout << "ArraySet::operator=(const ArraySet& other) - copy assignment operator" << std::endl;
     if(&other==this){
         return *this;
     }
@@ -41,6 +58,7 @@ ArraySet& ArraySet::operator=(const ArraySet& other){
 }
 
 ArraySet ArraySet::operator&(const ArraySet& other)const{
+    if(setCounter < 10) std::cout << "ArraySet::operator&(const ArraySet& other) - intersection operator" << std::endl;
     ArraySet res;
     bool flag;
     
@@ -60,6 +78,7 @@ ArraySet ArraySet::operator&(const ArraySet& other)const{
 }
 
 ArraySet ArraySet::operator|(const ArraySet& other)const{
+    if(setCounter < 10) std::cout << "ArraySet::operator|(const ArraySet& other) - union operator" << std::endl;
     ArraySet res;
     res = *this;
     for(int i=0;i<other.sz;i++){
@@ -69,6 +88,7 @@ ArraySet ArraySet::operator|(const ArraySet& other)const{
 }
 
 ArraySet& ArraySet::operator&=(const ArraySet& other){
+    if(setCounter < 10) std::cout << "ArraySet::operator&=(const ArraySet& other) - intersection assignment operator" << std::endl;
     if(&other==this){
         return *this;
     }
@@ -99,6 +119,7 @@ ArraySet& ArraySet::operator&=(const ArraySet& other){
 }
 
 ArraySet& ArraySet::operator|=(const ArraySet& other){
+    if(setCounter < 10) std::cout << "ArraySet::operator|=(const ArraySet& other) - union assignment operator" << std::endl;
     if(&other==this){
         return *this;
     }
@@ -111,6 +132,7 @@ ArraySet& ArraySet::operator|=(const ArraySet& other){
 }
 
 ArraySet ArraySet::operator~()const{
+    if(setCounter < 10) std::cout << "ArraySet::operator~() - complement operator" << std::endl;
     ArraySet res;
     bool flag;
     for(int i=0;i<UNIVERSUM_SIZE;i++){
@@ -128,6 +150,7 @@ ArraySet ArraySet::operator~()const{
 }
 
 bool ArraySet::operator==(const ArraySet& other)const{
+    if(setCounter < 10) std::cout << "ArraySet::operator==(const ArraySet& other) - equality operator" << std::endl;
     if(this->sz!=other.sz){
         return false;
     }
@@ -147,11 +170,13 @@ bool ArraySet::operator==(const ArraySet& other)const{
 }
 
 ArraySet ArraySet::subtractSets(const ArraySet& B, const ArraySet& C, const ArraySet& D)const{
+    if(setCounter < 10) std::cout << "ArraySet::subtractSets(const ArraySet& B, const ArraySet& C, const ArraySet& D) - subtract sets method" << std::endl;
     ArraySet resSet = *this & ~(B | C | D);
     return resSet;
 }
 
 void ArraySet::insert(char ch){
+    if(setCounter < 10) std::cout << "ArraySet::insert(char ch) - insert character: " << ch << std::endl;
     if(sz==26){
         return;
     }
@@ -169,6 +194,7 @@ void ArraySet::insert(char ch){
 }
 
 void ArraySet::remove(char ch){
+    if(setCounter < 10) std::cout << "ArraySet::remove(char ch) - remove character: " << ch << std::endl;
     if(sz==0){
         return;
     }
@@ -191,6 +217,7 @@ void ArraySet::remove(char ch){
 }
 
 bool ArraySet::contains(char ch)const{
+    if(setCounter < 10) std::cout << "ArraySet::contains(char ch) - check contains character: " << ch << std::endl;
     for(int i=0;i<sz;i++){
         if(set[i]==ch){
             return true;
@@ -200,6 +227,7 @@ bool ArraySet::contains(char ch)const{
 }
 
 void ArraySet::print()const{
+    if(setCounter < 10) std::cout << "ArraySet::print() - print set contents" << std::endl;
     for(int i=0;i<sz;i++){
         std::cout << set[i];
         if(i!=sz-1){
@@ -209,21 +237,25 @@ void ArraySet::print()const{
 }
 
 char* ArraySet::toChar()const{
+    if(setCounter < 10) std::cout << "ArraySet::toChar() - convert to char array" << std::endl;
     char* res = new char[sz+1];
     strcpy(res, set);
     return res;
 }
 
 std::string ArraySet::toString()const{
+    if(setCounter < 10) std::cout << "ArraySet::toString() - convert to string" << std::endl;
     std::string res(set);
     return res;
 }
 
 std::size_t ArraySet::getSize()const{
+    if(setCounter < 10) std::cout << "ArraySet::getSize() - get set size" << std::endl;
     return sz;
 }
 
 void ArraySet::clear(){
+    if(setCounter < 10) std::cout << "ArraySet::clear() - clear set" << std::endl;
     sz=0;
     set[sz]='\0';
 }

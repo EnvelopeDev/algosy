@@ -5,6 +5,7 @@
 
 class ListSet{
 private:
+    static int setCounter;
     struct Node
     {
         char value;

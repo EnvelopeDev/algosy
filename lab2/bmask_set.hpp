@@ -5,17 +5,18 @@
 
 class BitMaskSet{
 private:
-    unsigned long long set;
-    static const std::size_t UNIVERSUM_SIZE = 26;
+    unsigned long long set; //set in the form of a bitmask
+    static const std::size_t UNIVERSUM_SIZE = 26; //size of latin alphabet
+    static int setCounter;
 public:
-    BitMaskSet();
-    BitMaskSet(const char* inpSet);
-    BitMaskSet(const BitMaskSet& other);
-    ~BitMaskSet();
-    BitMaskSet operator|(const BitMaskSet& other)const;
-    BitMaskSet operator&(const BitMaskSet& other)const;
-    BitMaskSet& operator=(const BitMaskSet& other);
-    BitMaskSet& operator|=(const BitMaskSet& other);
+    BitMaskSet(); //default constructor
+    BitMaskSet(const char* inpSet); //constructor with the array of characters
+    BitMaskSet(const BitMaskSet& other); //copy constructor
+    ~BitMaskSet(); //destructor
+    BitMaskSet operator|(const BitMaskSet& other)const; //union operator
+    BitMaskSet operator&(const BitMaskSet& other)const; //intersection operator
+    BitMaskSet& operator=(const BitMaskSet& other); //assignment operator
+    BitMaskSet& operator|=(const BitMaskSet& other); //union operator with assignmenet
     BitMaskSet& operator&=(const BitMaskSet& other);
     BitMaskSet operator~()const;
     bool operator==(const BitMaskSet& other)const;
