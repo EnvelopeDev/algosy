@@ -103,6 +103,7 @@ void FileManager::outputFromCSVtoConsole(const char* filename, std::vector<char*
     char** setGroup;
     std::ifstream fin(filename);
     std::string out;
+    std::cout << "output from: " << filename << '\n';
     std::cout << "==================[OUTPUT]==================\n";
     for(int i=0;i<sets.size();i++){
         getline(fin, out);
