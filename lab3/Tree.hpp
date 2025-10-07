@@ -15,6 +15,7 @@ private:
     void print(Node* node, std::string prefix, bool isLeft)const;
     void makeTree(int _numNodes);
     void generateNumNodes();
+    int cntNdsDL(Node* node, int depth)const;
 public:
     Tree();
     void generateRandomTree();
@@ -23,8 +24,10 @@ public:
     ~Tree();
     Tree& operator=(const Tree& other);
     bool isEmpty()const;
+    int countNodesInDeepestLevel()const;
     void print()const;
     void clearTree();
+    void addNode();
     int getNumNodes()const;
     int getMaxDepth()const;
 };

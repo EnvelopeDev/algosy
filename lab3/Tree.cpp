@@ -24,7 +24,7 @@ void Tree::generateRandomTree(){
 }
 
 void Tree::generateNumNodes(){
-    int distribution = rng() % 100;
+    int distribution = rng()%100;
     
     if(distribution<50){
         numNodes = 5 + (rng()%6);
@@ -33,6 +33,36 @@ void Tree::generateNumNodes(){
     }else{
         numNodes = 26 + (rng()%25);
     }
+}
+
+Tree& Tree::operator=(const Tree& other){
+    if(this==&other){
+        return *this;
+    }
+    this->makeTree(other.numNodes);
+    return *this;
+}
+
+int Tree::countNodesInDeepestLevel()const{
+    if(!root){
+        return 0;
+    }
+    return cntNdsDL(root, 0);
+}
+
+int Tree::cntNdsDL(Node* node, int depth)const{
+    if(!node){
+        return 0;
+    }
+    int count=0;
+    
+    count += cntNdsDL(node->left, depth + 1);
+    if(depth==maxDepth){
+        count++;
+    }
+    count += cntNdsDL(node->right, depth + 1);
+    
+    return count;
 }
 
 void Tree::makeTree(int _numNodes){
