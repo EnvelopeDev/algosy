@@ -1,17 +1,20 @@
 #include "Tree.hpp"
 
-std::random_device rd;
-std::mt19937 rng(rd());
-
 Tree::Tree(){
     root = nullptr;
     numNodes=0;
     maxDepth=0;
+    std::random_device rd;
+    rng = std::mt19937(rd());
+    dist = std::uniform_real_distribution<double>(0.0, 1.0);
 }
 
 Tree::Tree(int _numNodes){
     root = nullptr;
-    makeTree(_numNodes);
+    std::random_device rd;
+    rng = std::mt19937(rd());
+    dist = std::uniform_real_distribution<double>(0.0, 1.0);
+    makeTreeSimple(_numNodes);
 }
 
 Tree::~Tree(){
@@ -19,27 +22,36 @@ Tree::~Tree(){
 }
 
 void Tree::generateRandomTree(){
-    generateNumNodes();
-    makeTree(numNodes);
+    if(!isEmpty()){
+        clearTree();
+    }
+    maxTag='a';
+    root = makeRandomSubtree(1, 0);
 }
 
-void Tree::generateNumNodes(){
-    int distribution = rng()%100;
-    
-    if(distribution<50){
-        numNodes = 5 + (rng()%6);
-    }else if(distribution<95){
-        numNodes = 11 + (rng()%10);
-    }else{
-        numNodes = 26 + (rng()%25);
+Node* Tree::makeRandomSubtree(double chanceOfGeneration, int currDepth){
+    Node* node=nullptr;
+    if(dist(rng) < chanceOfGeneration){
+        node = new Node(maxTag);
+        if(maxTag-'a'=='z'-'a' + 1){
+            maxTag='a';
+        }
+        else{
+            maxTag++;
+        }
+        node->right = makeRandomSubtree(chanceOfGeneration-0.15, currDepth+1);
+        node->left = makeRandomSubtree(chanceOfGeneration-0.15, currDepth+1);
     }
+    if(node){
+        if(currDepth>maxDepth){
+            maxDepth=currDepth;
+        }
+        numNodes++;
+    }
+    return node;
 }
 
 Tree& Tree::operator=(const Tree& other){
-    if(this==&other){
-        return *this;
-    }
-    this->makeTree(other.numNodes);
     return *this;
 }
 
@@ -55,7 +67,7 @@ int Tree::cntNdsDL(Node* node, int depth)const{
         return 0;
     }
     int count=0;
-    
+
     count += cntNdsDL(node->left, depth + 1);
     if(depth==maxDepth){
         count++;
@@ -65,7 +77,7 @@ int Tree::cntNdsDL(Node* node, int depth)const{
     return count;
 }
 
-void Tree::makeTree(int _numNodes){
+void Tree::makeTreeSimple(int _numNodes){
     if(!isEmpty()){
         clearTree();
     }

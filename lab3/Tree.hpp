@@ -12,10 +12,13 @@ private:
     Node* root;
     int maxDepth;
     int numNodes;
+    char maxTag;
+    std::mt19937 rng;
+    std::uniform_real_distribution<double> dist;
     void print(Node* node, std::string prefix, bool isLeft)const;
-    void makeTree(int _numNodes);
-    void generateNumNodes();
+    void makeTreeSimple(int _numNodes);
     int cntNdsDL(Node* node, int depth)const;
+    Node* makeRandomSubtree(double chanceOfGeneration, int currDepth);
 public:
     Tree();
     void generateRandomTree();
