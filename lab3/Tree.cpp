@@ -51,7 +51,7 @@ Node* Tree::makeRandomSubtree(double chanceOfGeneration, int currDepth){
     return node;
 }
 
-int Tree::countNodesInDeepestLevel()const{
+int Tree::countNodesOnDeepestLevel()const{
     if(!root){
         return 0;
     }
