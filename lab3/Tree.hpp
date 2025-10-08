@@ -25,7 +25,6 @@ public:
     Tree(int _numNodes);
     Tree(const Tree& other);
     ~Tree();
-    Tree& operator=(const Tree& other);
     bool isEmpty()const;
     int countNodesInDeepestLevel()const;
     void print()const;

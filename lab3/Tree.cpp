@@ -39,8 +39,8 @@ Node* Tree::makeRandomSubtree(double chanceOfGeneration, int currDepth){
         else{
             maxTag++;
         }
-        node->right = makeRandomSubtree(chanceOfGeneration-0.15, currDepth+1);
         node->left = makeRandomSubtree(chanceOfGeneration-0.15, currDepth+1);
+        node->right = makeRandomSubtree(chanceOfGeneration-0.15, currDepth+1);
     }
     if(node){
         if(currDepth>maxDepth){
@@ -51,15 +51,14 @@ Node* Tree::makeRandomSubtree(double chanceOfGeneration, int currDepth){
     return node;
 }
 
-Tree& Tree::operator=(const Tree& other){
-    return *this;
-}
-
 int Tree::countNodesInDeepestLevel()const{
     if(!root){
         return 0;
     }
-    return cntNdsDL(root, 0);
+    std::cout << "Deep bypass: ";
+    int numNds = cntNdsDL(root, 0);
+    std::cout << '\n';
+    return numNds;
 }
 
 int Tree::cntNdsDL(Node* node, int depth)const{
@@ -67,7 +66,7 @@ int Tree::cntNdsDL(Node* node, int depth)const{
         return 0;
     }
     int count=0;
-
+    std::cout << node->value << '_';
     count += cntNdsDL(node->left, depth + 1);
     if(depth==maxDepth){
         count++;
@@ -126,7 +125,7 @@ void Tree::print()const{
     }
 }
 
-void Tree::print(Node* node, std::string prefix, bool isLeft) const {
+void Tree::print(Node* node, std::string prefix, bool isLeft)const{
     if(!node){
         return;
     }
