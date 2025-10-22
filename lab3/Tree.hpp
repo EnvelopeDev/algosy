@@ -5,31 +5,35 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <cstring>
 #include <random>
 
 class Tree{
 private:
     Node* root;
-    int maxDepth;
-    int numNodes;
-    char maxTag;
+    Node* makeRandomSubtree(double chanceOfGeneration, int currDepth);
+    Node* buildFromArrayDFS(const char* arr, int& index, int maxNodes, int currentDepth, int maxDepth);
     std::mt19937 rng;
     std::uniform_real_distribution<double> dist;
+    char maxTag;
     void print(Node* node, std::string prefix, bool isLeft)const;
-    int cntNdsDL(Node* node, int depth)const;
-    Node* makeRandomSubtree(double chanceOfGeneration, int currDepth);
+    int maxDepth;
+    int numNodes;
+    int getRealMaxDepth(Node* node, int depth)const;
+    int cntNdsDL(Node* node, int depth, int targetDepth)const;
 public:
     Tree();
-    void makeTreeSimple(int _numNodes);
-    void generateRandomTree();
+    ~Tree();
     Tree(int _numNodes);
     Tree(const Tree& other);
-    ~Tree();
     bool isEmpty()const;
+    int getNumNodes()const;
+    int getMaxDepth()const;
     int countNodesOnDeepestLevel()const;
+    void makeTreeSimple(int _numNodes);
+    void buildTreeFromArray(const char* arr);
+    void generateRandomTree();
     void print()const;
     void clearTree();
     void addNode();
-    int getNumNodes()const;
-    int getMaxDepth()const;
 };

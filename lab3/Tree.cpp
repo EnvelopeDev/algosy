@@ -29,6 +29,46 @@ void Tree::generateRandomTree(){
     root = makeRandomSubtree(1, 0);
 }
 
+void Tree::buildTreeFromArray(const char* arr){
+    if(!isEmpty()){
+        clearTree();
+    }
+
+    if(!arr || arr[0] == '\0'){
+        root = nullptr;
+        numNodes = 0;
+        maxDepth = 0;
+        return;
+    }
+
+    numNodes = strlen(arr);
+
+    if(numNodes == 0){
+        maxDepth = 0;
+    }
+    else{
+        maxDepth = static_cast<int>(log2(numNodes));
+    }
+
+    int index = 0;
+    root = buildFromArrayDFS(arr, index, numNodes, 0, maxDepth);
+    maxDepth = getRealMaxDepth(root, 0);
+}
+
+Node* Tree::buildFromArrayDFS(const char* arr, int& index, int maxNodes, int currentDepth, int maxDepth){
+    if(index >= maxNodes || currentDepth > maxDepth){
+        return nullptr;
+    }
+
+    Node* node = new Node(arr[index]);
+    index++;
+
+    node->left = buildFromArrayDFS(arr, index, maxNodes, currentDepth + 1, maxDepth);
+    node->right = buildFromArrayDFS(arr, index, maxNodes, currentDepth + 1, maxDepth);
+
+    return node;
+}
+
 Node* Tree::makeRandomSubtree(double chanceOfGeneration, int currDepth){
     Node* node=nullptr;
     if(dist(rng) < chanceOfGeneration){
@@ -56,24 +96,34 @@ int Tree::countNodesOnDeepestLevel()const{
         return 0;
     }
     std::cout << "Deep bypass: ";
-    int numNds = cntNdsDL(root, 0);
+    int realMaxDepth = getRealMaxDepth(root, 0);
+    int numNds = cntNdsDL(root, 0, realMaxDepth);
     std::cout << '\n';
     return numNds;
 }
 
-int Tree::cntNdsDL(Node* node, int depth)const{
+int Tree::cntNdsDL(Node* node, int depth, int targetDepth)const{
     if(!node){
         return 0;
     }
     int count=0;
     std::cout << node->value << '_';
-    count += cntNdsDL(node->left, depth + 1);
-    if(depth==maxDepth){
+    count += cntNdsDL(node->left, depth + 1, targetDepth);
+    if(depth == targetDepth){
         count++;
     }
-    count += cntNdsDL(node->right, depth + 1);
-    
+    count += cntNdsDL(node->right, depth + 1, targetDepth);
+
     return count;
+}
+
+int Tree::getRealMaxDepth(Node* node, int depth)const{
+    if(!node){
+        return depth - 1;
+    }
+    int leftDepth = getRealMaxDepth(node->left, depth + 1);
+    int rightDepth = getRealMaxDepth(node->right, depth + 1);
+    return std::max(leftDepth, rightDepth);
 }
 
 void Tree::makeTreeSimple(int _numNodes){
@@ -84,7 +134,7 @@ void Tree::makeTreeSimple(int _numNodes){
     if(numNodes<0){
         throw std::invalid_argument("Binary tree can`t be initialized with a negative number of the nodes!");
     }
-    
+
     if(numNodes==0){
         root=nullptr;
         maxDepth=0;
@@ -133,7 +183,7 @@ void Tree::print(Node* node, std::string prefix, bool isLeft)const{
     std::cout << prefix;
     std::cout << (isLeft ? "├──" : "└──");
     std::cout << node->value << '\n';
-    
+
     if(node->left || node->right){
         std::string newPrefix = prefix + (isLeft ? "│   " : "    ");
         print(node->left, newPrefix, true);
