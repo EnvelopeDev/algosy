@@ -1,18 +1,30 @@
 #include "Tree.hpp"
 
 int main(){
-    Tree tree;
+        Tree tree;
     char userOption;
-    int numNodes;
-    std::cout << "Generate random tree? (y/n): ";
+
+    std::cout << "Choose tree creation method:\n";
+    std::cout << "1 - Random tree\n";
+    std::cout << "2 - Simple tree\n";
+    std::cout << "3 - From array\n";
+    std::cout << "Your choice: ";
     std::cin >> userOption;
-    if(userOption=='y'){
+
+    if(userOption == '1'){
         tree.generateRandomTree();
     }
-    else{
+    else if(userOption == '2'){
+        int numNodes;
         std::cout << "Enter a number of nodes: ";
         std::cin >> numNodes;
         tree.makeTreeSimple(numNodes);
+    }
+    else if(userOption == '3'){
+        char arr[100];
+        std::cout << "Enter character array: ";
+        std::cin >> arr;
+        tree.buildTreeFromArray(arr);
     }
     std::cout << "\n\n";
     tree.print();

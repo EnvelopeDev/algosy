@@ -108,6 +108,45 @@ void Tree::makeTreeSimple(int _numNodes){
     }
 }
 
+void Tree::buildTreeFromArray(const char* arr){
+    if(!isEmpty()){
+        clearTree();
+    }
+
+    if(!arr || (arr[0]=='\0')){
+        root = nullptr;
+        numNodes = 0;
+        maxDepth = 0;
+        return;
+    }
+
+    numNodes = strlen(arr);
+
+    if(numNodes==0){
+        maxDepth = 0;
+    } 
+    else{
+        maxDepth = log2(numNodes);
+    }
+
+    int index = 0;
+    root = buildFromArrayDFS(arr, index, numNodes, 0, maxDepth);
+}
+
+Node* Tree::buildFromArrayDFS(const char* arr, int& index, int maxNodes, int currentDepth, int maxDepth){
+    if(index>=maxNodes || currentDepth>maxDepth){
+        return nullptr;
+    }
+
+    Node* node = new Node(arr[index]);
+    index++;
+
+    node->left = buildFromArrayDFS(arr, index, maxNodes, currentDepth + 1, maxDepth);
+    node->right = buildFromArrayDFS(arr, index, maxNodes, currentDepth + 1, maxDepth);
+
+    return node;
+}
+
 void Tree::clearTree(){
     delete root;
     maxDepth=0;

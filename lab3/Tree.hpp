@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <random>
+#include <cstring>
 
 class Tree{
 private:
@@ -18,6 +19,7 @@ private:
     void print(Node* node, std::string prefix, bool isLeft)const;
     int cntNdsDL(Node* node, int depth)const;
     Node* makeRandomSubtree(double chanceOfGeneration, int currDepth);
+    Node* buildFromArrayDFS(const char* arr, int& index, int maxNodes, int currentDepth, int maxDepth);
 public:
     Tree();
     void makeTreeSimple(int _numNodes);
@@ -27,6 +29,7 @@ public:
     ~Tree();
     bool isEmpty()const;
     int countNodesOnDeepestLevel()const;
+    void buildTreeFromArray(const char* arr);
     void print()const;
     void clearTree();
     void addNode();
