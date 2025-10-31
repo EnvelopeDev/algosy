@@ -55,8 +55,31 @@ int Tree::countNodesOnDeepestLevel()const{
     if(!root){
         return 0;
     }
-    std::cout << "Deep bypass: ";
-    int numNds = cntNdsDL(root, 0);
+    std::cout << "Width bypass: ";
+    int numNds = 0;
+
+    std::queue<Node*> freeNodes;
+    freeNodes.push(root);
+    Node* curr;
+    int currDeep=0;
+    for(int i=0;i<numNodes;i++){
+        if(currDeep+1==log2(i+1)){
+            currDeep++;
+        }
+        curr = freeNodes.front();
+        std::cout << curr->value << '_';
+        if(currDeep==maxDepth){
+            numNds++;
+        }
+        if(curr->left){
+            freeNodes.push(curr->left);
+        }
+        if(curr->right){
+            freeNodes.push(curr->right);
+        }
+        freeNodes.pop();
+    }
+
     std::cout << '\n';
     return numNds;
 }
