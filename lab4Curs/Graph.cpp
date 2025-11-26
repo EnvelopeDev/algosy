@@ -37,22 +37,22 @@ void Graph::print(){
     if(!head){
         return;
     }
-    std::queue<NodeGraph*> queue;
-    std::unordered_set<NodeGraph*> passed;
+    std::queue<NodeGraph*> nodesNeedToPass;
+    std::unordered_set<NodeGraph*> passedNodes;
     NodeGraph* curr;
-    queue.push(head);
-    passed.insert(head);
-    while(!(queue.empty())){
-        curr = queue.front();
+    nodesNeedToPass.push(head);
+    passedNodes.insert(head);
+    while(!(nodesNeedToPass.empty())){
+        curr = nodesNeedToPass.front();
         std::cout << "Node "<< curr->value << ": "<< '\n';
         for(const auto& node:curr->neighbors){
             std::cout << "  " << node->value << std::endl;
         }
-        queue.pop();
+        nodesNeedToPass.pop();
         for(int i=0;i<curr->neighbors.size();i++){
-            if(passed.find(curr->neighbors[i]) == passed.end()){
-                queue.push(curr->neighbors[i]);
-                passed.insert(curr->neighbors[i]);
+            if(passedNodes.find(curr->neighbors[i]) == passedNodes.end()){
+                nodesNeedToPass.push(curr->neighbors[i]);
+                passedNodes.insert(curr->neighbors[i]);
             }
         }
     }
