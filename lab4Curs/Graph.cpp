@@ -1,49 +1,42 @@
 #include "Graph.hpp"
 
 Graph::Graph(){
-    head=nullptr;
     numNodes=0;
 }
 
 Graph::Graph(std::vector<std::vector<int>> _nodes){
     numNodes=_nodes.size();
     if(_nodes.empty()){
-        head=nullptr;
         return;
     }
-    std::vector<NodeGraph*> nodes(_nodes.size(), nullptr);
 
-    for(size_t i=0;i<_nodes.size();i++){
-        nodes[i] = new NodeGraph(i+1);
+    for(int i=0;i<_nodes.size();i++){
+        graph[i] = std::make_unique<Node>(i+1);
     }
 
     for(size_t i=0;i<_nodes.size();i++){
         for(size_t j=0;j<_nodes[i].size();j++){
-            if(nodes[i]->value!=_nodes[i][j]){
-                nodes[i]->addNeighbor(nodes[_nodes[i][j]-1]);
+            if(i!=_nodes[i][j]-1){
+                graph[i]->addNeighbor(graph[_nodes[i][j]-1]);
             }
         }
     }
-    head = nodes[0];
 }
 
-Graph::~Graph(){
-    if(head!=nullptr){
-        delete head;
-    }
-}
+Graph::~Graph(){}
 
 void Graph::print(){
-    if(!head){
+    if(numNodes==0){
         return;
     }
-    std::queue<NodeGraph*> nodesNeedToPass;
-    std::unordered_set<NodeGraph*> passedNodes;
-    NodeGraph* curr;
-    nodesNeedToPass.push(head);
-    passedNodes.insert(head);
+    std::queue<std::shared_ptr<Node>> nodesNeedToPass;
+    std::unordered_set<std::shared_ptr<Node>> passedNodes;
+
+    nodesNeedToPass.push(graph[0]);
+    passedNodes.insert(graph[0]);
+
     while(!(nodesNeedToPass.empty())){
-        curr = nodesNeedToPass.front();
+        auto curr = nodesNeedToPass.front();
         std::cout << "Node "<< curr->value << ": "<< '\n';
         for(const auto& node:curr->neighbors){
             std::cout << "  " << node->value << std::endl;
