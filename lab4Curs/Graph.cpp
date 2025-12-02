@@ -53,11 +53,11 @@ std::vector<Graph> Graph::createBFSForest(){
 }
 
 Graph Graph::createBFSTree(std::unordered_set<std::shared_ptr<Node>>& passedNodes, const std::shared_ptr<Node>& startNode){
-    std::queue<std::shared_ptr<Node>> nodesNeedToPass;
+    std::queue<std::pair<std::shared_ptr<Node>, std::shared_ptr<Node>>> nodesNeedToPass;
     Graph tree;
     int currTreeIndex=0;
     tree.graph[currTreeIndex] = std::make_shared<Node>(currTreeIndex, startNode->value);
-    nodesNeedToPass.push(graph[startNode->index]);
+    nodesNeedToPass.push();
     passedNodes.insert(graph[startNode->index]);
     while(!(nodesNeedToPass.empty())){
         auto curr = nodesNeedToPass.front();
