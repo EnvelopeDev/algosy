@@ -9,9 +9,10 @@
 class Graph
 {
 private:
-    std::unordered_map<int, std::shared_ptr<Node>> graph;
+    std::unordered_map<int, std::unique_ptr<Node>> graph;
     int numNodes;
-    Graph createBFSTree(std::unordered_set<std::shared_ptr<Node>>& passedForestNodes, const std::shared_ptr<Node>& startNode);
+    Graph createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNode);
+    std::vector<Node*> getParentlessNodes();
 public:
     Graph();
     Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes

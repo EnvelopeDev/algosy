@@ -7,35 +7,38 @@ class Node
 private:
     int value;
     int index;
-    std::vector<std::shared_ptr<Node>> neighbors;
+    std::vector<Node*> childs;
+    std::vector<Node*> parents;
 public:
     Node(){
-        neighbors = std::vector<std::shared_ptr<Node>>();
+        childs = std::vector<Node*>();
+        parents = std::vector<Node*>();
         value=0;
         index=0;
     }
     Node(int _index){
         index = _index;
         value=0;
-        neighbors = std::vector<std::shared_ptr<Node>>();
+        childs = std::vector<Node*>();
+        parents = std::vector<Node*>();
     }
-    Node(int _value, int _index){
+    Node(int _index, int _value){
         value = _value;
         index = _index;
-        neighbors = std::vector<std::shared_ptr<Node>>();
-    }
-    Node(int _index, std::vector<std::shared_ptr<Node>> _neighbors) {
-        index = _index;
-        value=0;
-        neighbors = _neighbors;
+        childs = std::vector<Node*>();
+        parents = std::vector<Node*>();
     }
 
-    void addNeighbor(const std::shared_ptr<Node>& node){
-        neighbors.push_back(node);
+    void addChild(const std::unique_ptr<Node>& node){
+        childs.push_back(node.get());
+    }
+
+    void addParent(const std::unique_ptr<Node>& node){
+        parents.push_back(node.get());
     }
 
     bool hasNeighbors(){
-        return !neighbors.empty();
+        return !childs.empty();
     }
 
     ~Node(){}
