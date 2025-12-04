@@ -5,6 +5,7 @@
 #include <queue>
 #include <unordered_set>
 #include <unordered_map>
+#include <map>
 
 class Graph
 {
@@ -20,6 +21,8 @@ public:
     ~Graph();
 
     std::vector<Graph> createBFSForest();
-    void print();
+    void printNodes();
+    void printTable();
+    std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
     int getNumNodes();
 };

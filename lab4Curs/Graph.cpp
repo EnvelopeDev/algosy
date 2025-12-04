@@ -97,8 +97,76 @@ Graph Graph::createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNo
     return tree;
 }
 
-void Graph::print(){
+std::map<int, std::vector<int>> Graph::doAdjacencyMatrix(){
+    std::map<int, std::vector<int>> adjacencyMatrix;
+
+    for(const auto& node:graph){
+        adjacencyMatrix[node.first].resize(node.second->childs.size());
+        for(int i=0;i<node.second->childs.size();i++){
+            adjacencyMatrix[node.first][i] = node.second->childs[i]->index;
+        }
+    }
+    return adjacencyMatrix;
+}
+
+void Graph::printTable(){
+    if(numNodes == 0){
+        std::cout << "Graph is empty" << std::endl;
+        return;
+    }
+    std::cout << std::endl << "ADJACENCY MATRIX" << std::endl;
+    std::cout << "(direction: from row to column)" << std::endl << std::endl;
+    std::map<int, std::vector<int>> adjacencyMatrix = doAdjacencyMatrix();
+
+    std::cout << "    |";
+    for(int col = 0; col < numNodes; col++){
+        if(col < 10){
+            std::cout << "  " << col << " |";
+        }
+        else{
+            std::cout << " " << col << " |";
+        }
+    }
+    std::cout << std::endl;
+    for(int i = 0; i < numNodes + 1; i++){
+        std::cout << "-----";
+    }
+    std::cout << std::endl;
+    
+    for(int row=0; row<numNodes; row++){
+        if(row < 10){
+            std::cout << "  " << row << " |";
+        }
+        else{
+            std::cout << " " << row << " |";
+        }
+
+        for(int col=0; col<numNodes; col++){
+            bool hasEdge = false;
+            auto it = adjacencyMatrix.find(col);
+            if(it != adjacencyMatrix.end()){
+                for(int childIndex : it->second){
+                    if(childIndex == row){
+                        hasEdge = true;
+                        break;
+                    }
+                }
+            }
+
+            if(hasEdge){
+                std::cout << "  1 |";
+            }
+            else{
+                std::cout << "  0 |";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Graph::printNodes(){
     if(numNodes==0){
+        std::cout << "Graph is empty" << std::endl;
         return;
     }
     std::queue<Node*> nodesNeedToPass;
