@@ -115,17 +115,21 @@ void Graph::printTable(){
         return;
     }
     std::cout << std::endl << "ADJACENCY MATRIX" << std::endl;
-    std::cout << "(direction: from row to column)" << std::endl << std::endl;
+    std::cout << "(direction: from column to row)" << std::endl << std::endl;
     std::map<int, std::vector<int>> adjacencyMatrix = doAdjacencyMatrix();
+    std::vector<int> nodeIndexes(numNodes);
+    int currIndex=0;
 
     std::cout << "    |";
-    for(int col = 0; col < numNodes; col++){
-        if(col < 10){
-            std::cout << "  " << col << " |";
+    for(const auto& node:adjacencyMatrix){
+        if(node.first < 10){
+            std::cout << "  " << node.first << " |";
         }
         else{
-            std::cout << " " << col << " |";
+            std::cout << " " << node.first << " |";
         }
+        nodeIndexes[currIndex] = node.first;
+        currIndex++;
     }
     std::cout << std::endl;
     for(int i = 0; i < numNodes + 1; i++){
@@ -134,19 +138,19 @@ void Graph::printTable(){
     std::cout << std::endl;
     
     for(int row=0; row<numNodes; row++){
-        if(row < 10){
-            std::cout << "  " << row << " |";
+        if(nodeIndexes[row] < 10){
+            std::cout << "  " << nodeIndexes[row] << " |";
         }
         else{
-            std::cout << " " << row << " |";
+            std::cout << " " << nodeIndexes[row] << " |";
         }
 
         for(int col=0; col<numNodes; col++){
             bool hasEdge = false;
-            auto it = adjacencyMatrix.find(col);
+            auto it = adjacencyMatrix.find(nodeIndexes[col]);
             if(it != adjacencyMatrix.end()){
                 for(int childIndex : it->second){
-                    if(childIndex == row){
+                    if(childIndex == nodeIndexes[row]){
                         hasEdge = true;
                         break;
                     }
