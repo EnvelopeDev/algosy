@@ -1,11 +1,17 @@
 #include "Graph.hpp"
 
 Graph::Graph(){
+    std::random_device rd;
+    rng = std::mt19937(rd());
+    dist = std::uniform_real_distribution<double>(0.0, 1.0);
     numNodes=0;
 }
 
 Graph::Graph(std::vector<std::vector<int>> _nodes){
     numNodes=_nodes.size();
+    std::random_device rd;
+    rng = std::mt19937(rd());
+    dist = std::uniform_real_distribution<double>(0.0, 1.0);
     if(_nodes.empty()){
         return;
     }
@@ -26,6 +32,9 @@ Graph::Graph(std::vector<std::vector<int>> _nodes){
 
 Graph::Graph(const Graph& other){
     numNodes = other.numNodes;
+    std::random_device rd;
+    rng = std::mt19937(rd());
+    dist = std::uniform_real_distribution<double>(0.0, 1.0);
 
     for(const auto& node:other.graph){
         graph[node.first] = std::make_unique<Node>(node.first);
@@ -44,6 +53,13 @@ Graph::Graph(const Graph& other){
 }
 
 Graph::~Graph(){}
+
+void Graph::generateRandomGraph(){
+    double chance = dist(rng);
+    if(chance < 0.2){
+        
+    }
+}
 
 std::vector<Node*> Graph::getParentlessNodes(){
     std::vector<Node*> parentlessNodes;

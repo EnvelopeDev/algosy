@@ -6,12 +6,15 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <map>
+#include <random>
 
 class Graph
 {
 private:
     std::unordered_map<int, std::unique_ptr<Node>> graph;
     int numNodes;
+    std::mt19937 rng;
+    std::uniform_real_distribution<double> dist;
     Graph createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNode);
     std::vector<Node*> getParentlessNodes();
 public:
@@ -20,6 +23,7 @@ public:
     Graph(const Graph& other);
     ~Graph();
 
+    void generateRandomGraph();
     std::vector<Graph> createBFSForest();
     void printNodes();
     void printTable();
