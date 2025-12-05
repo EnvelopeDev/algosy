@@ -16,7 +16,7 @@ Graph::Graph(std::vector<std::vector<int>> _nodes){
         return;
     }
 
-    for(int i=0;i<_nodes.size();i++){
+    for(size_t i=0;i<_nodes.size();i++){
         graph[i] = std::make_unique<Node>(i, i);
     }
 
@@ -54,11 +54,80 @@ Graph::Graph(const Graph& other){
 
 Graph::~Graph(){}
 
+void Graph::setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes){
+    for(size_t i=0;i<_nodes.size();i++){
+        graph[i] = std::make_unique<Node>(i, i);
+    }
+
+    for(size_t i=0;i<_nodes.size();i++){
+        for(size_t j=0;j<_nodes[i].size();j++){
+            if(i!=_nodes[i][j]){
+                graph[i]->addChild(graph[_nodes[i][j]]);
+                graph[_nodes[i][j]]->addParent(graph[i]);
+            }
+        }
+    }
+}
+
+std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
+    int numHeadNodes, numEndNodes;
+    if(numNodes<4){
+        numHeadNodes=1;
+        numEndNodes=1;
+    }
+    else{
+        numHeadNodes = randomInt(1, numNodes/4);
+        numEndNodes = randomInt(1, numNodes/4);
+    }
+
+    std::unordered_set<int> headNodesIndexes, endNodesIndexes;
+    int headIndex, endIndex;
+    while(headNodesIndexes.size() < numHeadNodes){
+        headIndex = randomInt(0, numNodes-1);
+        if(headNodesIndexes.find(headIndex)==headNodesIndexes.end()){
+            headNodesIndexes.insert(headIndex);
+        }
+    }
+
+    while(endNodesIndexes.size() < numEndNodes){
+        endIndex = randomInt(0, numNodes-1);
+        if(endNodesIndexes.find(endIndex)==endNodesIndexes.end() && headNodesIndexes.find(endIndex)==headNodesIndexes.end()){
+            endNodesIndexes.insert(endIndex);
+        }
+    }
+
+    //FOR DEBUG
+    /*std::cout << numNodes << std::endl << std::endl;
+
+    for(const auto& num:headNodesIndexes){
+        std::cout << num << ' ';
+    }
+    std::cout << std::endl << std::endl;
+
+    for(const auto& num:endNodesIndexes){
+        std::cout << num << ' ';
+    }
+    std::cout << std::endl << std::endl;*/
+
+
+    
+    return {{}, {}};
+}
+
 void Graph::generateRandomGraph(){
     double chance = dist(rng);
-    if(chance < 0.2){
-        
+    graph.clear();
+    if(chance < 0.10){
+        numNodes = randomInt(1, 9);
     }
+    else if(chance < 0.9){
+        numNodes = randomInt(10, 20);
+    }
+    else{
+        numNodes = randomInt(21, 30);
+    }
+
+    setGraphWithAdjacencyMatrix(generateAdjacencyMatrix());
 }
 
 std::vector<Node*> Graph::getParentlessNodes(){
@@ -211,4 +280,8 @@ void Graph::printNodes(){
             }
         }
     }
+}
+
+int Graph::randomInt(int min, int max){
+    return (rng()%(max+1-min))+min;
 }

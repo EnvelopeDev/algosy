@@ -17,6 +17,7 @@ private:
     std::uniform_real_distribution<double> dist;
     Graph createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNode);
     std::vector<Node*> getParentlessNodes();
+    int randomInt(int min, int max);
 public:
     Graph();
     Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes
@@ -29,4 +30,6 @@ public:
     void printTable();
     std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
     int getNumNodes();
+    void setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes);
+    std::vector<std::vector<int>> generateAdjacencyMatrix();
 };
