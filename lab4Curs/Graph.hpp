@@ -18,6 +18,8 @@ private:
     Graph createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNode);
     std::vector<Node*> getParentlessNodes();
     int randomInt(int min, int max);
+    std::vector<std::vector<int>> generateAdjacencyMatrix();
+    std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
 public:
     Graph();
     Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes
@@ -28,8 +30,6 @@ public:
     std::vector<Graph> createBFSForest();
     void printNodes();
     void printTable();
-    std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
     int getNumNodes();
     void setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes);
-    std::vector<std::vector<int>> generateAdjacencyMatrix();
 };

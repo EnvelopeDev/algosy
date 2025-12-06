@@ -96,6 +96,15 @@ std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
         }
     }
 
+    std::vector<std::vector<int>> mtx(numNodes);
+    int numChilds;
+    for(int i=0;i<numNodes;i++){
+        if(endNodesIndexes.find(i)!=endNodesIndexes.end()){
+            continue;
+        }
+        //доделать тут
+    }
+
     //FOR DEBUG
     /*std::cout << numNodes << std::endl << std::endl;
 
@@ -109,9 +118,7 @@ std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
     }
     std::cout << std::endl << std::endl;*/
 
-
-    
-    return {{}, {}};
+    return mtx;
 }
 
 void Graph::generateRandomGraph(){

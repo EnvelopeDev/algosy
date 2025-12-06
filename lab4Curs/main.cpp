@@ -13,5 +13,6 @@ int main(){
 	gr.printTable();*/
 	Graph gr;
 	gr.generateRandomGraph();
+	gr.printTable();
 	return 0;
 }
