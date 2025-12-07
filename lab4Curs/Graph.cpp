@@ -69,19 +69,31 @@ void Graph::setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes){
     }
 }
 
-std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
-    int numHeadNodes, numEndNodes;
-    if(numNodes<4){
-        numHeadNodes=1;
-        numEndNodes=1;
+std::vector<int> Graph::generateChilds(std::unordered_set<int> headNodesIndexes, std::unordered_set<int> endNodesIndexes){
+    int numChilds;
+    if(numNodes<8){
+        numChilds=randomInt(1, 3);
     }
     else{
-        numHeadNodes = randomInt(1, numNodes/4);
-        numEndNodes = randomInt(1, numNodes/4);
+        numChilds=randomInt(1, 4);
     }
 
+    std::vector<int> childs(numChilds);
+    int randNodeIndex;
+
+    while(childs.size() < numChilds){
+        randNodeIndex = randomNode(headNodesIndexes, endNodesIndexes);
+        childs.push_back(randNodeIndex);
+    }
+
+    return childs;
+}
+
+std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
+    int numHeadNodes = randomInt(1, numNodes/4), numEndNodes = randomInt(1, numNodes/4);
     std::unordered_set<int> headNodesIndexes, endNodesIndexes;
     int headIndex, endIndex;
+
     while(headNodesIndexes.size() < numHeadNodes){
         headIndex = randomInt(0, numNodes-1);
         if(headNodesIndexes.find(headIndex)==headNodesIndexes.end()){
@@ -99,24 +111,11 @@ std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
     std::vector<std::vector<int>> mtx(numNodes);
     int numChilds;
     for(int i=0;i<numNodes;i++){
-        if(endNodesIndexes.find(i)!=endNodesIndexes.end()){
+        if(endNodesIndexes.find(i)!=endNodesIndexes.end() && headNodesIndexes.find(i)!=headNodesIndexes.end()){
             continue;
         }
-        //доделать тут
+        mtx.push_back(generateChilds(headNodesIndexes, endNodesIndexes));
     }
-
-    //FOR DEBUG
-    /*std::cout << numNodes << std::endl << std::endl;
-
-    for(const auto& num:headNodesIndexes){
-        std::cout << num << ' ';
-    }
-    std::cout << std::endl << std::endl;
-
-    for(const auto& num:endNodesIndexes){
-        std::cout << num << ' ';
-    }
-    std::cout << std::endl << std::endl;*/
 
     return mtx;
 }
@@ -125,7 +124,7 @@ void Graph::generateRandomGraph(){
     double chance = dist(rng);
     graph.clear();
     if(chance < 0.10){
-        numNodes = randomInt(1, 9);
+        numNodes = randomInt(5, 9);
     }
     else if(chance < 0.9){
         numNodes = randomInt(10, 20);
@@ -291,4 +290,14 @@ void Graph::printNodes(){
 
 int Graph::randomInt(int min, int max){
     return (rng()%(max+1-min))+min;
+}
+
+int Graph::randomNode(std::unordered_set<int> headNodesIndexes, std::unordered_set<int> endNodesIndexes){
+    int randNodeIndex;
+
+    do{
+        randNodeIndex = randomInt(0, numNodes-1);
+    }while(headNodesIndexes.find(randNodeIndex) != headNodesIndexes.end() || endNodesIndexes.find(randNodeIndex) != endNodesIndexes.end());
+
+    return randNodeIndex;
 }
