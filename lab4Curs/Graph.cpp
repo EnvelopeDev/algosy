@@ -201,6 +201,11 @@ std::vector<Node*> Graph::getParentlessNodes(){
 }
 
 std::vector<Graph> Graph::createBFSForest(){
+    if(graph.empty()){
+        std::cout<<"Graph is empty =("<<std::endl;
+        return {};
+    }
+
     std::vector<Graph> forest;
     std::unordered_set<Node*> passedNodes;
     std::vector<Node*> startNodes = getParentlessNodes();
@@ -303,7 +308,7 @@ void Graph::printTable(){
             }
 
             if(hasEdge){
-                std::cout << "  1 |";
+                std::cout << "\033[32m  1\033[0m"<<" |";
             }
             else{
                 std::cout << "  0 |";
