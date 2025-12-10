@@ -28,12 +28,13 @@ private:
     int randomNode(std::unordered_set<int> headNodesIndexes); //generating nodes without head and end nodes
 public:
     Graph();
-    Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes
+    Graph(std::vector<std::vector<int>>& _nodes); //creating graph with the vector of nums of a neighbor-nodes
     Graph(const Graph& other);
     ~Graph();
 
     void generateRandomGraph(bool generateNumNodes=true, int _numNodes=10);
     std::vector<Graph> createBFSForest();
+    bool isOrientated();
 
     void printNodes();
     void printTable();

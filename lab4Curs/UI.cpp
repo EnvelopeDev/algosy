@@ -96,19 +96,15 @@ void UI::CustomGeneration(){
         }
         nodes.push_back(childs);
     }
-    for(const auto &childs : nodes){
-        for(const auto &node : childs){
-            std::cout<<node<<" ";
-        }
-        std::cout<<std::endl;
-        
-    }
     
     graph.setGraphWithAdjacencyMatrix(nodes);
-    graph.printTable();
-    std::cin>>nodesCount;
+    if(!graph.isOrientated()){
+        std::cout << "WARNING: your graph is not orientated!" << std::endl;
+    }
 
     std::cout << "Graph created successfully!" << std::endl;
+    std::cout << "Press Enter to continue..." << std::endl;
+    getchar();
 }
 
 UI::~UI(){}

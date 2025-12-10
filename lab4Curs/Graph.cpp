@@ -7,7 +7,7 @@ Graph::Graph(){
     numNodes=0;
 }
 
-Graph::Graph(std::vector<std::vector<int>> _nodes){
+Graph::Graph(std::vector<std::vector<int>>& _nodes){
     numNodes=_nodes.size();
     std::random_device rd;
     rng = std::mt19937(rd());
@@ -54,8 +54,20 @@ Graph::Graph(const Graph& other){
 
 Graph::~Graph(){}
 
+bool Graph::isOrientated(){
+    for(const auto& node:graph){
+        for(const auto& child:node.second->childs){
+            if(std::find(child->childs.begin(), child->childs.end(), node.second.get())!=child->childs.end()){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void Graph::setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes){
     graph.clear();
+    numNodes = _nodes.size();
     for(size_t i=0;i<_nodes.size();i++){
         graph[i] = std::make_unique<Node>(i, i);
     }
