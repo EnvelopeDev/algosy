@@ -21,7 +21,7 @@ private:
     std::vector<std::vector<int>> generateAdjacencyMatrix();
     std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
     std::vector<int> generateChilds(int nodeIndex, std::vector<std::vector<int>>& adjMtx, std::unordered_set<int> headNodesIndexes, bool isHeadNode=false, std::vector<int> nodePool={});
-    std::vector<int> getPossibleChildNodes(int nodeIndex, std::vector<std::vector<int>>& adjMtx);
+    std::vector<int> getPossibleChildNodes(int nodeIndex, std::vector<std::vector<int>>& adjMtx, std::unordered_set<int> headNodesIndexes);
     std::vector<Node*> getParentlessNodes();
 
     int randomInt(int min, int max);
