@@ -1,12 +1,12 @@
 #pragma once
 #include "Node.hpp"
-#include <vector>
 #include <iostream>
 #include <queue>
 #include <unordered_set>
 #include <unordered_map>
 #include <map>
 #include <random>
+#include <algorithm>
 
 class Graph
 {
@@ -23,7 +23,7 @@ private:
     std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
     std::vector<int> generateChilds(std::unordered_set<int> headNodesIndexes, int nodeIndex, std::vector<std::vector<int>>& adjMtx);
     bool isParentless(std::vector<int> mtxAdj, std::unordered_set<int> headNodesIndexes);
-    std::vector<int> getPossibleChildNodes(int nodeIndex);
+    std::vector<int> getPossibleChildNodes(int nodeIndex, std::vector<std::vector<int>>& adjMtx);
 public:
     Graph();
     Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes

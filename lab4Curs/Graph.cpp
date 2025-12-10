@@ -70,12 +70,25 @@ void Graph::setGraphWithAdjacencyMatrix(std::vector<std::vector<int>> _nodes){
     }
 }
 
+std::vector<int> Graph::getPossibleChildNodes(int nodeIndex, std::vector<std::vector<int>>& adjMtx){
+    std::vector<int> possibleChilds;
+    for(int i=0;i<adjMtx.size();i++){
+        if(nodeIndex==i){
+            continue;
+        }
+
+        if(std::find(adjMtx[i].begin(), adjMtx[i].end(), nodeIndex) == adjMtx[i].end()){
+            possibleChilds.push_back(i);
+        }
+    }
+    return possibleChilds;
+}
+
 std::vector<int> Graph::generateChilds(std::unordered_set<int> headNodesIndexes, int nodeIndex, std::vector<std::vector<int>>& adjMtx){
     int numChilds;
     double chance = dist(rng);
 
     if(chance<0.2){
-        numChilds=0;
         return {};
     }
 
@@ -87,19 +100,30 @@ std::vector<int> Graph::generateChilds(std::unordered_set<int> headNodesIndexes,
     }
 
     std::vector<int> childs(numChilds);
-    std::vector<int> possibleChilds = getPossibleChildNodes(nodeIndex);
-    int randNodeIndex;
+    std::vector<int> possibleChilds = getPossibleChildNodes(nodeIndex, adjMtx);
+    if(possibleChilds.empty()){
+        return {};
+    }
 
+    int randNodeIndex;
     while(childs.size() < numChilds){
-        
-        childs.push_back(randNodeIndex);
+        if(possibleChilds.size() < 5){
+            randNodeIndex = randomInt(0, possibleChilds.size()-1);
+        }
+        else{
+            randNodeIndex = randomInt(0, 4);
+        }
+
+        if(std::find(childs.begin(), childs.end(), possibleChilds[randNodeIndex])==childs.end()){
+            childs.push_back(possibleChilds[randNodeIndex]);
+        }
     }
 
     return childs;
 }
 
 std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
-    int numHeadNodes = randomInt(1, numNodes/4), numEndNodes = randomInt(1, numNodes/4);
+    int numHeadNodes = randomInt(1, numNodes/4);
     std::unordered_set<int> headNodesIndexes;
     int headIndex, endIndex;
 
