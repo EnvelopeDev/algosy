@@ -18,11 +18,12 @@ private:
     Graph createBFSTree(std::unordered_set<Node*>& passedNodes, Node* startNode);
     std::vector<Node*> getParentlessNodes();
     int randomInt(int min, int max);
-    int randomNode(std::unordered_set<int> headNodesIndexes, std::unordered_set<int> endNodesIndexes); //generating nodes without head and end nodes
+    int randomNode(std::unordered_set<int> headNodesIndexes); //generating nodes without head and end nodes
     std::vector<std::vector<int>> generateAdjacencyMatrix();
     std::map<int, std::vector<int>> doAdjacencyMatrix(); //МАТРИЦА СМЕЖНОСТИ
-    std::vector<int> generateChilds(std::unordered_set<int> headNodesIndexes, std::unordered_set<int> endNodesIndexes);
-    bool isParentless(std::vector<int> mtxAdj, std::unordered_set<int> headNodesIndexes, std::unordered_set<int> endNodesIndexes);
+    std::vector<int> generateChilds(std::unordered_set<int> headNodesIndexes, int nodeIndex, std::vector<std::vector<int>>& adjMtx);
+    bool isParentless(std::vector<int> mtxAdj, std::unordered_set<int> headNodesIndexes);
+    std::vector<int> getPossibleChildNodes(int nodeIndex);
 public:
     Graph();
     Graph(std::vector<std::vector<int>> _nodes); //creating graph with the vector of nums of a neighbor-nodes
