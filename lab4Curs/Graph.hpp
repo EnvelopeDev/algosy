@@ -32,7 +32,7 @@ public:
     Graph(const Graph& other);
     ~Graph();
 
-    void generateRandomGraph();
+    void generateRandomGraph(bool generateNumNodes=true, int _numNodes=10);
     std::vector<Graph> createBFSForest();
 
     void printNodes();

@@ -157,17 +157,22 @@ std::vector<std::vector<int>> Graph::generateAdjacencyMatrix(){
     return mtx;
 }
 
-void Graph::generateRandomGraph(){
+void Graph::generateRandomGraph(bool generateNumNodes, int _numNodes){
     double chance = dist(rng);
     graph.clear();
-    if(chance < 0.10){
-        numNodes = randomInt(4, 6);
-    }
-    else if(chance < 0.9){
-        numNodes = randomInt(7, 20);
+    if(generateNumNodes){
+        if(chance < 0.10){
+            numNodes = randomInt(4, 6);
+        }
+        else if(chance < 0.9){
+            numNodes = randomInt(7, 20);
+        }
+        else{
+            numNodes = randomInt(20, 30);
+        }
     }
     else{
-        numNodes = randomInt(20, 30);
+        numNodes=_numNodes;
     }
     
     setGraphWithAdjacencyMatrix(generateAdjacencyMatrix());
