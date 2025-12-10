@@ -14,5 +14,10 @@ int main(){
 	Graph gr;
 	gr.generateRandomGraph();
 	gr.printTable();
+	std::vector<Graph> forest = gr.createBFSForest();
+	for(auto& tree:forest){
+		tree.printTable();
+		std::cout << '\n';
+	}
 	return 0;
 }
