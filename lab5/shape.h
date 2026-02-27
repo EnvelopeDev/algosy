@@ -1,4 +1,6 @@
+#include "screen.h"
 #include <list>
+#include <iostream>
 using std::list;
 //==1. Поддержка экрана в форме матрицы символов ==
 char screen[YMAX] [XMAX];	

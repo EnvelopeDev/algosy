@@ -2,39 +2,145 @@
 //#include "pch.h"	//связь с ОС (пример для Visual C++2017)
 #include <locale.h>
 #include <iostream>
-#include "screen.h"
 #include "shape.h"
-// ПРИМЕР ДОБАВКИ: дополнительный фрагмент – полуокружность
-class h_circle: public rectangle, public reflectable {
+
+class h_circle : public rectangle, public reflectable {
 public:
-	h_circle(point a, int rd) 
-		: rectangle(point(a.x-rd, a.y), point(a.x+rd,a.y+rd*0.7+1)) { }
-	void draw();
-	void flip_horisontally() { };   // Отразить горизонтально (пустая функция)
-	void rotate_right() {}     // Повернуть вправо 
-	void rotate_left() {}      // Повернуть влево
+    point dVector;      // вектор диаметра
+    int angle;          // угол поворота: 0, 90, 180, 270
+    
+    h_circle(point a, int rd) : rectangle(point(a.x-rd, a.y), point(a.x+rd, a.y+rd*0.7+1)) {
+        dVector = point(rd, 0);
+        angle = 0;
+    }
+    
+    void draw();
+    void flip_horisontally();
+    void rotate_right();
+    void rotate_left();
 };
-void h_circle :: draw()   //Алгоритм Брезенхэма для окружностей
-{  // (выдаются два сектора, указываемые значением reflected::vert)
-    int x0 = (sw.x+ne.x)/2, y0 = vert ? ne.y : sw.y;
-	int radius = (ne.x - sw.x)/2;
-	int x = 0, y = radius, delta = 2 - 2 * radius, error = 0;
-    while(y >= 0) { // Цикл рисования
-	    if(vert) { put_point(x0 + x, y0 - y*0.7); put_point(x0 - x, y0 - y*0.7); }
-		else { put_point(x0 + x, y0 + y*0.7); put_point(x0 - x, y0 + y*0.7); }
+
+void h_circle::draw() {
+    // Оставляем ВСЁ как в оригинале
+    int x0 = (sw.x + ne.x) / 2;
+    int y0 = vert ? ne.y : sw.y;  // как в оригинале!
+    int radius = (ne.x - sw.x) / 2;
+    
+    int x = 0, y = radius, delta = 2 - 2 * radius, error = 0;
+    
+    while(y >= 0) {
+        // Базовая точка (как в оригинале, но с поправкой на угол)
+        int base_x = x;
+        int base_y = y * 0.7;
+        
+        // Координаты после поворота
+        int px1_x, px1_y, px2_x, px2_y;
+        
+        // В зависимости от угла поворота по-разному располагаем точки
+        switch(angle) {
+            case 0: // 0° - оригинальное поведение (вниз или вверх через vert)
+                if(vert) {
+                    px1_x = x0 + base_x; px1_y = y0 - base_y;
+                    px2_x = x0 - base_x; px2_y = y0 - base_y;
+                } else {
+                    px1_x = x0 + base_x; px1_y = y0 + base_y;
+                    px2_x = x0 - base_x; px2_y = y0 + base_y;
+                }
+                break;
+                
+            case 90: // 90° - поворот вправо
+                if(vert) {
+                    px1_x = x0 + base_y; px1_y = y0 - base_x;
+                    px2_x = x0 + base_y; px2_y = y0 + base_x;
+                } else {
+                    px1_x = x0 - base_y; px1_y = y0 - base_x;
+                    px2_x = x0 - base_y; px2_y = y0 + base_x;
+                }
+                break;
+                
+            case 180: // 180° - перевёрнуто
+                if(vert) {
+                    px1_x = x0 + base_x; px1_y = y0 + base_y;
+                    px2_x = x0 - base_x; px2_y = y0 + base_y;
+                } else {
+                    px1_x = x0 + base_x; px1_y = y0 - base_y;
+                    px2_x = x0 - base_x; px2_y = y0 - base_y;
+                }
+                break;
+                
+            case 270: // 270° - поворот влево
+                if(vert) {
+                    px1_x = x0 - base_y; px1_y = y0 - base_x;
+                    px2_x = x0 - base_y; px2_y = y0 + base_x;
+                } else {
+                    px1_x = x0 + base_y; px1_y = y0 - base_x;
+                    px2_x = x0 + base_y; px2_y = y0 + base_x;
+                }
+                break;
+        }
+        
+        put_point(px1_x, px1_y);
+        put_point(px2_x, px2_y);
+        
+        // Алгоритм Брезенхема (без изменений)
         error = 2 * (delta + y) - 1;
-        if(delta < 0 && error <= 0) { ++x; delta += 2 * x + 1; continue; }
+        if(delta < 0 && error <= 0) {
+            ++x; 
+            delta += 2 * x + 1; 
+            continue;
+        }
+        
         error = 2 * (delta - x) - 1;
-        if(delta > 0 && error > 0) { --y; delta += 1 - 2 * y; continue; }
-        ++x; delta += 2 * (x - y);  --y;
-	}
-//	rectangle::draw();
+        if(delta > 0 && error > 0) { 
+            --y; 
+            delta += 1 - 2 * y; 
+            continue; 
+        }
+        
+        ++x;
+        delta += 2 * (x - y);  
+        --y;
+    }
 }
+
+void h_circle::rotate_left() {
+    angle = (angle + 90) % 360;
+    
+    // Поворачиваем вектор диаметра
+    int new_dx = -dVector.y;
+    int new_dy = dVector.x;
+    dVector.x = new_dx;
+    dVector.y = new_dy;
+    
+    // НЕ меняем sw, ne, vert!
+}
+
+void h_circle::rotate_right() {
+    angle = (angle + 270) % 360;
+    
+    int new_dx = dVector.y;
+    int new_dy = -dVector.x;
+    dVector.x = new_dx;
+    dVector.y = new_dy;
+    
+    // НЕ меняем sw, ne, vert!
+}
+
+void h_circle::flip_horisontally() {
+    dVector.x = -dVector.x;
+    hor = !hor;
+    
+    // При горизонтальном отражении угол меняется зеркально
+    if(angle == 90) angle = 270;
+    else if(angle == 270) angle = 90;
+}
+
 // ПРИМЕР ДОБАВКИ: дополнительная функция присоединения…
 void down(shape &p,  const shape &q)
 {    point n = q.south( );
      point s = p.north( );
-     p.move(n.x - s.x, n.y - s.y - 1); }
+     p.move(n.x - s.x, n.y - s.y - 1); 
+}
 // Cборная пользовательская фигура – физиономия
 class myshape : public rectangle {   // Моя фигура ЯВЛЯЕТСЯ
      int w, h;			             //        прямоугольником
@@ -73,6 +179,7 @@ void myshape :: move(int a, int b)
 int main( ) 
 {   setlocale(LC_ALL, "Rus");
 	screen_init( );
+	/*
 //== 1. Объявление набора фигур ==
 	rectangle hat(point(0, 0), point(14, 5));
 	line brim(point(20,9),17);
@@ -98,7 +205,12 @@ int main( )
 	shape_refresh( );
 	std::cout << "=== Ready! ===\n";
 	std::cin.get();       //Смотреть результат
-	screen_destroy( );
+	*/
+	h_circle hc(point(10, 10), 5);
+	hc.rotate_left();
+	//hc.rotate_right();
+	hc.draw();
+	screen_refresh();
+	//screen_destroy( );
 	return 0; 
 }
-
