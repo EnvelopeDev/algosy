@@ -2,137 +2,50 @@
 //#include "pch.h"	//связь с ОС (пример для Visual C++2017)
 #include <locale.h>
 #include <iostream>
+#include <cmath>
 #include "shape.h"
 
 class h_circle : public rectangle, public reflectable {
 public:
-    point dVector;      // вектор диаметра
-    int angle;          // угол поворота: 0, 90, 180, 270
-    
+    double angle;          // угол поворота: 0, 90, 180, 270
+    point center;
+    int radius;
     h_circle(point a, int rd) : rectangle(point(a.x-rd, a.y), point(a.x+rd, a.y+rd*0.7+1)) {
-        dVector = point(rd, 0);
         angle = 0;
+        center=a;
+        radius=rd;
     }
     
     void draw();
     void flip_horisontally();
+    void flip_vertically();
     void rotate_right();
     void rotate_left();
 };
 
 void h_circle::draw() {
-    // Оставляем ВСЁ как в оригинале
-    int x0 = (sw.x + ne.x) / 2;
-    int y0 = vert ? ne.y : sw.y;  // как в оригинале!
-    int radius = (ne.x - sw.x) / 2;
-    
-    int x = 0, y = radius, delta = 2 - 2 * radius, error = 0;
-    
-    while(y >= 0) {
-        // Базовая точка (как в оригинале, но с поправкой на угол)
-        int base_x = x;
-        int base_y = y * 0.7;
-        
-        // Координаты после поворота
-        int px1_x, px1_y, px2_x, px2_y;
-        
-        // В зависимости от угла поворота по-разному располагаем точки
-        switch(angle) {
-            case 0: // 0° - оригинальное поведение (вниз или вверх через vert)
-                if(vert) {
-                    px1_x = x0 + base_x; px1_y = y0 - base_y;
-                    px2_x = x0 - base_x; px2_y = y0 - base_y;
-                } else {
-                    px1_x = x0 + base_x; px1_y = y0 + base_y;
-                    px2_x = x0 - base_x; px2_y = y0 + base_y;
-                }
-                break;
-                
-            case 90: // 90° - поворот вправо
-                if(vert) {
-                    px1_x = x0 + base_y; px1_y = y0 - base_x;
-                    px2_x = x0 + base_y; px2_y = y0 + base_x;
-                } else {
-                    px1_x = x0 - base_y; px1_y = y0 - base_x;
-                    px2_x = x0 - base_y; px2_y = y0 + base_x;
-                }
-                break;
-                
-            case 180: // 180° - перевёрнуто
-                if(vert) {
-                    px1_x = x0 + base_x; px1_y = y0 + base_y;
-                    px2_x = x0 - base_x; px2_y = y0 + base_y;
-                } else {
-                    px1_x = x0 + base_x; px1_y = y0 - base_y;
-                    px2_x = x0 - base_x; px2_y = y0 - base_y;
-                }
-                break;
-                
-            case 270: // 270° - поворот влево
-                if(vert) {
-                    px1_x = x0 - base_y; px1_y = y0 - base_x;
-                    px2_x = x0 - base_y; px2_y = y0 + base_x;
-                } else {
-                    px1_x = x0 + base_y; px1_y = y0 - base_x;
-                    px2_x = x0 + base_y; px2_y = y0 + base_x;
-                }
-                break;
-        }
-        
-        put_point(px1_x, px1_y);
-        put_point(px2_x, px2_y);
-        
-        // Алгоритм Брезенхема (без изменений)
-        error = 2 * (delta + y) - 1;
-        if(delta < 0 && error <= 0) {
-            ++x; 
-            delta += 2 * x + 1; 
-            continue;
-        }
-        
-        error = 2 * (delta - x) - 1;
-        if(delta > 0 && error > 0) { 
-            --y; 
-            delta += 1 - 2 * y; 
-            continue; 
-        }
-        
-        ++x;
-        delta += 2 * (x - y);  
-        --y;
+    double currAngle=angle;
+    double endAngle=angle+M_PI;
+    double angleStep = M_PI / 64;
+    for(;currAngle<endAngle;currAngle+=angleStep){
+        put_point(center.x+radius*cos(currAngle), center.y+radius*sin(currAngle));
     }
 }
 
 void h_circle::rotate_left() {
-    angle = (angle + 90) % 360;
-    
-    // Поворачиваем вектор диаметра
-    int new_dx = -dVector.y;
-    int new_dy = dVector.x;
-    dVector.x = new_dx;
-    dVector.y = new_dy;
-    
-    // НЕ меняем sw, ne, vert!
+    angle = angle+M_PI_2;
 }
 
 void h_circle::rotate_right() {
-    angle = (angle + 270) % 360;
-    
-    int new_dx = dVector.y;
-    int new_dy = -dVector.x;
-    dVector.x = new_dx;
-    dVector.y = new_dy;
-    
-    // НЕ меняем sw, ne, vert!
+    angle = angle-M_PI_2;
 }
 
 void h_circle::flip_horisontally() {
-    dVector.x = -dVector.x;
-    hor = !hor;
-    
-    // При горизонтальном отражении угол меняется зеркально
-    if(angle == 90) angle = 270;
-    else if(angle == 270) angle = 90;
+    angle = angle+M_PI;
+}
+
+void h_circle::flip_vertically(){
+    angle = angle+M_PI;
 }
 
 // ПРИМЕР ДОБАВКИ: дополнительная функция присоединения…
@@ -179,12 +92,10 @@ void myshape :: move(int a, int b)
 int main( ) 
 {   setlocale(LC_ALL, "Rus");
 	screen_init( );
-	/*
 //== 1. Объявление набора фигур ==
 	rectangle hat(point(0, 0), point(14, 5));
 	line brim(point(20,9),17);
 	myshape face(point(15,10), point(27,18));
-	h_circle beard(point(40,10), 5);
 	shape_refresh( );
 	std::cout << "=== Generated... ===\n";
 	std::cin.get(); //Смотреть исходный набор
@@ -192,25 +103,16 @@ int main( )
 	hat.rotate_right( );
 	brim.resize(2.0);
 	face.resize(1.2);
-	beard.flip_vertically( );
-	beard.resize(1.2);
-        shape_refresh( );
+    shape_refresh( );
 	std::cout << "=== Prepared... ===\n";
 	std::cin.get(); //Смотреть результат поворотов/отражений
 //== 3. Сборка изображения ==
 //	face.move(0, -10); // Лицо – в исходное положение (если нужно!)
 	up(brim, face);
 	up(hat, brim);
-	down(beard, face);
 	shape_refresh( );
 	std::cout << "=== Ready! ===\n";
 	std::cin.get();       //Смотреть результат
-	*/
-	h_circle hc(point(10, 10), 5);
-	hc.rotate_left();
-	//hc.rotate_right();
-	hc.draw();
-	screen_refresh();
 	//screen_destroy( );
 	return 0; 
 }
