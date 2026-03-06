@@ -156,9 +156,3 @@ public:
     put_line(seast( ), sw);   put_line(sw, nwest( ));
   }
 };
-void up(shape& p, const shape& q) // поместить фигуру p над фигурой q
-{	//Это ОБЫЧНАЯ функция, не член класса! Динамическое связыва-ние!!
-  point n = q.north( );
-  point s = p.south( );
-  p.move(n.x - s.x, n.y - s.y + 1);
-}
