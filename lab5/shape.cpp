@@ -12,7 +12,7 @@ public:
     point center;
     int radius;
     
-    h_circle(point a) : center(a), radius(2), angle(0) {}
+    h_circle(point a, int rd) : center(a), radius(rd), angle(0) {}
     
     point north() const override {
         double maxY = center.y - radius;  // минимум
@@ -277,10 +277,10 @@ int main( )
 //== 1. Объявление набора фигур ==
 	rectangle hat(point(0, 0), point(14, 5));
 	line brim(point(20,9),17);
-	h_circle earL(point(30, 5));
-	h_circle earR(point(40, 5));
-	h_circle tie(point(50, 5));
-	h_circle shishak(point(60, 5));
+	h_circle earL(point(30, 5), 2);
+	h_circle earR(point(40, 5), 2);
+	h_circle tie(point(50, 5), 2);
+	h_circle shishak(point(60, 5), 2);
 	myshape face(point(15,10), point(27,18));
 	shape_refresh( );
 	std::cout << "=== Generated... ===\n";
