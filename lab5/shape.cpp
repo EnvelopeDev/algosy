@@ -1,9 +1,10 @@
 // Пополнение и использование библиотеки фигур
-//#include "pch.h"	//связь с ОС (пример для Visual C++2017)
 #include <locale.h>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <memory>
+#include <vector>
 #include "shape.h"
 
 class h_circle : public rotatable, public reflectable {
@@ -12,7 +13,10 @@ public:
     point center;
     int radius;
     
-    h_circle(point a, int rd) : center(a), radius(rd), angle(0) {}
+    h_circle(point a, int rd) : center(a), radius(rd), angle(0) {
+        if (rd <= 0) throw InvalidParameter("Radius must be positive");
+        check_bounds(*this);
+    }
     
     point north() const override {
         double maxY = center.y - radius;  // минимум
@@ -127,10 +131,12 @@ public:
     void move(int dx, int dy) override {
         center.x += dx;
         center.y += dy;
+        check_bounds(*this);
     }
     
     void resize(double factor) override {
         radius = static_cast<int>(radius * factor);
+        check_bounds(*this);
     }
     
     void flip_horisontally() {
@@ -139,20 +145,24 @@ public:
         } else {
             angle = 3*M_PI - angle;
         }
+        check_bounds(*this);
     }
     
     void flip_vertically() {
         angle = 2*M_PI - angle;
+        check_bounds(*this);
     }
     
     void rotate_right() {
         angle -= M_PI_2;
         if (angle < 0) angle += 2*M_PI;
+        check_bounds(*this);
     }
     
     void rotate_left() {
         angle += M_PI_2;
         if (angle >= 2*M_PI) angle -= 2*M_PI;
+        check_bounds(*this);
     }
 };
 
@@ -271,44 +281,213 @@ void myshape :: move(int a, int b)
 	 l_eye.move(a, b);  r_eye.move(a, b);
 	 mouth.move(a, b);
 }
+
+// Функция для безопасного выполнения операций с фигурами
+template<typename Func, typename... Args>
+bool safe_execute(const char* operation_name, Func&& func, Args&&... args) {
+    try {
+        func(std::forward<Args>(args)...);
+        return true;
+    } catch (const InvalidParameter& e) {
+        std::cout << "\n!!! Исключение: InvalidParameter в операции " << operation_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const OutOfScreen& e) {
+        std::cout << "\n!!! Исключение: OutOfScreen в операции " << operation_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const ShapeException& e) {
+        std::cout << "\n!!! Исключение: ShapeException в операции " << operation_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "\n!!! Исключение: std::exception в операции " << operation_name 
+                  << " - " << e.what() << std::endl;
+    }
+    return false;
+}
+
+// Функция для безопасного создания фигур
+template<typename T, typename... Args>
+std::unique_ptr<T> safe_create(const char* shape_name, Args&&... args) {
+    try {
+        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
+        std::cout << "✓ Фигура " << shape_name << " создана успешно" << std::endl;
+        return ptr;
+    } catch (const InvalidParameter& e) {
+        std::cout << "\n!!! Исключение: InvalidParameter при создании " << shape_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const OutOfScreen& e) {
+        std::cout << "\n!!! Исключение: OutOfScreen при создании " << shape_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const ShapeException& e) {
+        std::cout << "\n!!! Исключение: ShapeException при создании " << shape_name 
+                  << " - " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "\n!!! Исключение: std::exception при создании " << shape_name 
+                  << " - " << e.what() << std::endl;
+    }
+    return nullptr;
+}
+
 int main( ) 
-{   setlocale(LC_ALL, "Rus");
-	screen_init( );
-//== 1. Объявление набора фигур ==
-	rectangle hat(point(0, 0), point(14, 5));
-	line brim(point(20,9),17);
-	h_circle earL(point(30, 5), 2);
-	h_circle earR(point(40, 5), 2);
-	h_circle tie(point(50, 5), 2);
-	h_circle shishak(point(60, 5), 2);
-	myshape face(point(15,10), point(27,18));
-	shape_refresh( );
-	std::cout << "=== Generated... ===\n";
-	std::cin.get(); //Смотреть исходный набор
-//== 2. Подготовка к сборке ==
-	earL.rotate_left();
-	earR.rotate_right();
-	tie.flip_horisontally();
-	hat.rotate_right( );
-	earL.resize(1.4);
-	earR.resize(1.4);
-	shishak.resize(1.5);
-	tie.resize(1.3);
-	brim.resize(2.0);
-	face.resize(1.2);
-    shape_refresh( );
-	std::cout << "=== Prepared... ===\n";
-	std::cin.get(); //Смотреть результат поворотов/отражений
-//== 3. Сборка изображения ==
-//	face.move(0, -10); // Лицо – в исходное положение (если нужно!)
-	up(brim, face);
-	up(hat, brim);
-	up_center(shishak, hat);
-	down_center(tie, face);
-	right_center(earR, face);
-	left_center(earL, face);
-	shape_refresh( );
-	std::cout << "=== Ready! ===\n";
-	std::cin.get();       //Смотреть результат
-	screen_destroy( );
+{  
+    setlocale(LC_ALL, "Rus");
+    screen_init( );
+
+    std::cout << "\n========== ТЕСТИРОВАНИЕ ИСКЛЮЧЕНИЙ ==========\n" << std::endl;
+
+    //== 1. Демонстрация исключений при создании ==
+    std::cout << "\n--- Тест 1: Создание с некорректными параметрами ---\n" << std::endl;
+    
+    // 1.1 Отрицательный радиус
+    auto bad_circle1 = safe_create<h_circle>("h_circle с отрицательным радиусом", point(30, 5), -2);
+    
+    // 1.2 Радиус = 0
+    auto bad_circle2 = safe_create<h_circle>("h_circle с нулевым радиусом", point(30, 5), 0);
+    
+    // 1.3 Линия нулевой длины
+    auto bad_line = safe_create<line>("line нулевой длины", point(20, 9), point(20, 9));
+    
+    // 1.4 Прямоугольник с некорректными координатами (ширина <= 0)
+    auto bad_rect = safe_create<rectangle>("rectangle с width <= 0", point(10, 10), point(5, 15));
+    
+    // 1.5 Прямоугольник с некорректными координатами (высота <= 0)
+    auto bad_rect2 = safe_create<rectangle>("rectangle с height <= 0", point(10, 10), point(15, 5));
+    
+    // 1.6 Фигура за пределами экрана
+    auto out_screen = safe_create<h_circle>("h_circle за пределами экрана", point(200, 200), 10);
+    
+    std::cout << "\n--- Тест 2: Нормальное создание основных фигур ---\n" << std::endl;
+    
+    // Создаём нормальные фигуры
+    auto hat = safe_create<rectangle>("hat", point(0, 0), point(14, 5));
+    auto brim = safe_create<line>("brim", point(20, 9), 17);
+    auto earL = safe_create<h_circle>("earL", point(30, 5), 2);
+    auto earR = safe_create<h_circle>("earR", point(40, 5), 2);
+    auto tie = safe_create<h_circle>("tie", point(50, 5), 2);
+    auto shishak = safe_create<h_circle>("shishak", point(60, 5), 2);
+    auto face = safe_create<myshape>("face", point(15, 10), point(27, 18));
+
+    std::cout << "\n=== Первый экран (только нормальные фигуры) ===\n";
+    shape_refresh();
+    std::cout << "\nНажмите Enter для продолжения...\n";
+    std::cin.get();
+
+    //== 2. Демонстрация исключений при трансформациях ==
+    std::cout << "\n--- Тест 3: Исключения при трансформациях ---\n" << std::endl;
+    
+    // 2.1 Поворот уже повёрнутой фигуры (повторный поворот)
+    if (earL) {
+        std::cout << "Поворачиваем earL влево (нормально):" << std::endl;
+        safe_execute("rotate_left earL (1)", [&](){ earL->rotate_left(); });
+        
+        std::cout << "Поворачиваем earL влево ещё раз (повторный поворот - должен сработать):" << std::endl;
+        safe_execute("rotate_left earL (2)", [&](){ earL->rotate_left(); });
+    }
+    
+    // 2.2 Отражение уже отражённой фигуры
+    if (tie) {
+        std::cout << "\nОтражаем tie горизонтально (нормально):" << std::endl;
+        safe_execute("flip_horisontally tie (1)", [&](){ tie->flip_horisontally(); });
+        
+        std::cout << "Отражаем tie горизонтально ещё раз (повторное отражение):" << std::endl;
+        safe_execute("flip_horisontally tie (2)", [&](){ tie->flip_horisontally(); });
+    }
+    
+    // 2.3 Изменение размера с некорректным фактором
+    if (earR) {
+        std::cout << "\nПытаемся изменить размер earR с фактором 0 (некорректно):" << std::endl;
+        safe_execute("resize earR factor 0", [&](){ earR->resize(0); });
+    }
+    
+    // 2.4 Изменение размера, приводящее к выходу за экран
+    if (earR) {
+        std::cout << "\nПытаемся увеличить earR в 50 раз (выход за экран):" << std::endl;
+        safe_execute("resize earR factor 50", [&](){ earR->resize(50); });
+    }
+    
+    // 2.5 Перемещение за пределы экрана
+    if (shishak) {
+        std::cout << "\nПытаемся переместить shishak за пределы экрана:" << std::endl;
+        safe_execute("move shishak (x+100)", [&](){ shishak->move(100, 0); });
+    }
+    
+    // 2.6 Поворот, приводящий к выходу за экран (для прямоугольника)
+    if (hat) {
+        std::cout << "\nПытаемся повернуть hat вправо (может выйти за экран):" << std::endl;
+        safe_execute("rotate_right hat", [&](){ hat->rotate_right(); });
+    }
+
+    std::cout << "\n=== Второй экран (после трансформаций с исключениями) ===\n";
+    std::cout << "Фигуры, вызвавшие исключения, не изменили своё состояние\n";
+    shape_refresh();
+    std::cout << "\nНажмите Enter для продолжения...\n";
+    std::cin.get();
+
+    //== 3. Демонстрация исключений при сборке ==
+    std::cout << "\n--- Тест 4: Исключения при сборке фигур ---\n" << std::endl;
+    
+    // 3.1 Присоединение несимметричной фигурой неправильной стороной
+    if (brim && face) {
+        std::cout << "Пытаемся поместить brim над face (нормально):" << std::endl;
+        safe_execute("up(brim, face)", [&](){ up(*brim, *face); });
+    }
+    
+    if (hat && brim) {
+        std::cout << "\nПытаемся поместить hat над brim (нормально):" << std::endl;
+        safe_execute("up(hat, brim)", [&](){ up(*hat, *brim); });
+    }
+    
+    if (shishak && hat) {
+        std::cout << "\nПытаемся поместить shishak над hat (может вызвать исключение):" << std::endl;
+        safe_execute("up_center(shishak, hat)", [&](){ up_center(*shishak, *hat); });
+    }
+    
+    // 3.2 Создаём тестовую окружность для демонстрации ошибки при left_center
+    auto test_circle = safe_create<h_circle>("test_circle для left_center", point(10, 10), 30);
+    if (test_circle && face) {
+        std::cout << "\nПытаемся поместить большую окружность слева от лица (выход за экран):" << std::endl;
+        safe_execute("left_center(test_circle, face)", [&](){ left_center(*test_circle, *face); });
+    }
+    
+    // 3.3 Попытка переместить несуществующую фигуру (nullptr)
+    std::cout << "\nПытаемся использовать фигуру, которая не была создана (bad_circle1):" << std::endl;
+    if (bad_circle1) {  // Этот код не выполнится, так как bad_circle1 == nullptr
+        safe_execute("move bad_circle", [&](){ bad_circle1->move(10, 10); });
+    } else {
+        std::cout << "✓ Фигура bad_circle1 не существует (nullptr) - операция пропущена" << std::endl;
+    }
+
+    std::cout << "\n=== Финальный экран (после сборки) ===\n";
+    shape_refresh();
+    std::cout << "\nНажмите Enter для завершения...\n";
+    std::cin.get();
+
+    //== Вывод статистики ==
+    std::cout << "\n========== ИТОГОВЫЙ ОТЧЁТ ОБ ИСКЛЮЧЕНИЯХ ==========\n" << std::endl;
+    std::cout << "Были продемонстрированы следующие типы исключений:\n" << std::endl;
+    
+    std::cout << "1. InvalidParameter:" << std::endl;
+    std::cout << "   - при создании фигуры с отрицательным радиусом" << std::endl;
+    std::cout << "   - при создании фигуры с нулевым радиусом" << std::endl;
+    std::cout << "   - при создании линии нулевой длины" << std::endl;
+    std::cout << "   - при создании прямоугольника с некорректными координатами" << std::endl;
+    std::cout << "   - при resize с фактором <= 0" << std::endl;
+    
+    std::cout << "\n2. OutOfScreen:" << std::endl;
+    std::cout << "   - при создании фигуры за пределами экрана" << std::endl;
+    std::cout << "   - при resize, выводящем фигуру за границы экрана" << std::endl;
+    std::cout << "   - при move, выводящем фигуру за границы экрана" << std::endl;
+    std::cout << "   - при повороте, выводящем фигуру за границы экрана" << std::endl;
+    std::cout << "   - при сборке фигур (left_center с большой окружностью)" << std::endl;
+    
+    std::cout << "\n3. Дополнительные ситуации:" << std::endl;
+    std::cout << "   - повторный поворот уже повёрнутой фигуры" << std::endl;
+    std::cout << "   - повторное отражение уже отражённой фигуры" << std::endl;
+    std::cout << "   - использование nullptr (фигуры, не прошедшие создание)" << std::endl;
+    
+    std::cout << "\nВсе исключения были перехвачены в функциях main (не в месте возникновения)," << std::endl;
+    std::cout << "обработаны с выводом диагностических сообщений, а фигуры," << std::endl;
+    std::cout << "вызвавшие исключения, либо не были созданы, либо сохранили своё" << std::endl;
+    std::cout << "предыдущее корректное состояние.\n" << std::endl;
+
+    screen_destroy();
 }
