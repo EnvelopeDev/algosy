@@ -3,17 +3,45 @@
 int BitMaskSet::setCounter=0;
 
 BitMaskSet::BitMaskSet(){
-    set = 0ULL;
+    set = 0UL;
 }
 
 BitMaskSet::BitMaskSet(const char* inpSet){
-    set = 0ULL;
+    set = 0UL;
     if(!inpSet){
         return;     
     }
     unsigned long long mask;
     for(int i=0;i<strlen(inpSet);i++){
-        mask = 1ULL << (inpSet[i]-'A');
+        if(inpSet[i]>='A' && inpSet[i]<='Z'){
+            mask = 1UL << (inpSet[i]-'A');
+        }
+        else{
+            if(inpSet[i]>'f'){
+                continue;
+            }
+            mask = 1UL << (inpSet[i]-'a'+26);
+        }
+        set|=mask;
+    }
+}
+
+BitMaskSet::BitMaskSet(const std::string& inpSet){
+    set = 0UL;
+    if(inpSet.length()==0){
+        return;     
+    }
+    unsigned long long mask;
+    for(int i=0;i<inpSet.length();i++){
+        if(inpSet[i]>='A' && inpSet[i]<='Z'){
+            mask = 1UL << (inpSet[i]-'A');
+        }
+        else{
+            if(inpSet[i]>'f'){
+                continue;
+            }
+            mask = 1UL << (inpSet[i]-'a'+26);
+        }
         set|=mask;
     }
 }
@@ -62,7 +90,7 @@ BitMaskSet& BitMaskSet::operator|=(const BitMaskSet& other){
 
 BitMaskSet BitMaskSet::operator~()const{
     BitMaskSet res;
-    res.set = ~this->set & ((1ULL<<UNIVERSUM_SIZE)-1);
+    res.set = ~this->set & ((1UL<<UNIVERSUM_SIZE)-1);
     return res;
 }
 
@@ -71,7 +99,15 @@ bool BitMaskSet::operator==(const BitMaskSet& other)const{
 }
 
 void BitMaskSet::insert(char ch){
-    set |= 1ULL << (ch-'A');
+    if(ch>='A' && ch<='Z'){
+        set |= 1UL << (ch-'A');
+    }
+    else{
+        if(ch>'f'){
+            return;
+        }
+        set |= 1UL << (ch-'a'+26);
+    }
 }
 
 BitMaskSet BitMaskSet::subtractSets(const BitMaskSet& B, const BitMaskSet& C, const BitMaskSet& D)const{
@@ -80,11 +116,25 @@ BitMaskSet BitMaskSet::subtractSets(const BitMaskSet& B, const BitMaskSet& C, co
 }
 
 void BitMaskSet::remove(char ch){
-    set &= ~(1ULL << (ch-'A'));
+    if(ch>='A' && ch<='Z'){
+        set &= ~(1UL << (ch-'A'));
+    }
+    else{
+        if(ch>'f'){
+            return;
+        }
+        set &= ~(1UL << (ch-'a'+26));
+    }
 }
 
 bool BitMaskSet::contains(char ch)const{
-    return set & (1ULL << (ch-'A'));
+    if(ch>='A' && ch<='Z'){
+        return set & (1UL << (ch-'A'));
+    }
+    if(ch>'f'){
+        return false;
+    }
+    return set & (1UL << (ch-'a'+26));
 }
 
 void BitMaskSet::print()const{
@@ -101,8 +151,13 @@ char* BitMaskSet::toChar()const{
     char* res = new char[UNIVERSUM_SIZE+1];
     int resSize=0;
     for(int i=0;i<UNIVERSUM_SIZE;i++){
-        if(set & (1ULL<<i)){
-            res[resSize] = 'A'+i;
+        if(set & (1UL<<i)){
+            if(i<26){
+                res[resSize] = 'A'+i;
+            }
+            else{
+                res[resSize] = 'a'+i-26;
+            }
             resSize++;
         }
     }
@@ -116,5 +171,5 @@ std::string BitMaskSet::toString()const{
 }
 
 void BitMaskSet::clear(){
-    set = 0ULL;
+    set = 0UL;
 }

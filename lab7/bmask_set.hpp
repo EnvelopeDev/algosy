@@ -5,12 +5,13 @@
 
 class BitMaskSet{
 private:
-    unsigned long long set; //set in the form of a bitmask
+    unsigned long set; //set in the form of a bitmask
     static const std::size_t UNIVERSUM_SIZE = 32; //size of latin alphabet
     static int setCounter;
 public:
     BitMaskSet(); //default constructor
     BitMaskSet(const char* inpSet); //constructor with the array of characters
+    BitMaskSet(const std::string& inpSet);
     BitMaskSet(const BitMaskSet& other); //copy constructor
     ~BitMaskSet(); //destructor
     BitMaskSet operator|(const BitMaskSet& other)const; //union operator
