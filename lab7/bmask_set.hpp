@@ -10,6 +10,7 @@ private:
     static int setCounter;
 public:
     BitMaskSet(); //default constructor
+    BitMaskSet(const unsigned long _mask);
     BitMaskSet(const char* inpSet); //constructor with the array of characters
     BitMaskSet(const std::string& inpSet);
     BitMaskSet(const BitMaskSet& other); //copy constructor
@@ -29,4 +30,6 @@ public:
     void remove(char ch);
     bool contains(char ch)const;
     void clear();
+    unsigned long getMask()const;
+    void setMask(const unsigned long _mask);
 };

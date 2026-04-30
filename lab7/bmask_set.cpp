@@ -6,6 +6,10 @@ BitMaskSet::BitMaskSet(){
     set = 0UL;
 }
 
+BitMaskSet::BitMaskSet(const unsigned long _mask){
+    set=_mask;
+}
+
 BitMaskSet::BitMaskSet(const char* inpSet){
     set = 0UL;
     if(!inpSet){
@@ -173,3 +177,6 @@ std::string BitMaskSet::toString()const{
 void BitMaskSet::clear(){
     set = 0UL;
 }
+
+unsigned long BitMaskSet::getMask()const{return set;}
+void BitMaskSet::setMask(const unsigned long _mask){set=_mask;}
