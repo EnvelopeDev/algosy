@@ -2,7 +2,7 @@
 #include "HashTable.hpp"
 #include "generator.hpp"
 #include <iostream>
-
+#include <string>
 class Interface
 {
 private:
