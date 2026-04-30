@@ -36,5 +36,5 @@ unsigned HashTable<TK, TV>::getBucketIndex(const TK& key){
 template<typename TK, typename TV>
 void HashTable<TK, TV>::insert(const TK& key, const TV& value){
     unsigned bucketIndex = getBucketIndex(key);
-    std::cout << bucketIndex << '\n';
+    buckets[bucketIndex].push_back();
 }
