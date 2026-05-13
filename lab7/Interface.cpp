@@ -18,4 +18,5 @@ void Interface::show(){
     std::cout << ht.getElem("1234")<<std::endl;
     std::cout << ht.getElem("HelloWorld")<<std::endl;
     std::cout << ht.getElem("HLWD")<<std::endl;
+    ht.printAllValues();
 }

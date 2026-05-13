@@ -10,7 +10,8 @@ template<typename TK, typename TV>
 class HashTable
 {
 private:
-    int numBuckets;
+    size_t numBuckets;
+    size_t numElems;
     std::vector<std::list<std::pair<TK, TV>>> buckets; //Вектор со списками в каждом из которых хранятся пары ключ-значение
     std::hash<TK> hasher;
     unsigned getBucketIndex(const TK& key);
@@ -21,6 +22,10 @@ public:
     void insert(const TK& key, const TV& value);
     TV& getElem(const TK& key);
     bool contains(const TK& key);
+    void printAllValues();
+
+    size_t getNumElems();
+    size_t getNumBuckets();
 };
 
 template<typename TK, typename TV>
@@ -29,6 +34,7 @@ HashTable<TK, TV>::~HashTable(){}
 template<typename TK, typename TV>
 HashTable<TK, TV>::HashTable(const size_t _numBuckets):numBuckets(_numBuckets){
     buckets.resize(numBuckets);
+    numElems=0;
 }
 
 template<typename TK, typename TV>
@@ -50,6 +56,7 @@ void HashTable<TK, TV>::insert(const TK& key, const TV& value){
     if(buckets[bucketIndex].empty()){
         buckets[bucketIndex].push_back(std::make_pair(key, value));
     }
+    numElems++;
 }
 
 template<typename TK, typename TV>
@@ -78,3 +85,25 @@ bool HashTable<TK, TV>::contains(const TK& key){
     }
     return false;
 }
+
+template<typename TK, typename TV>
+void HashTable<TK, TV>::printAllValues(){
+    int i=0;
+    for(const auto& bucket:buckets){
+        if(!bucket.empty()){
+            std::cout << "BUCKET INDEX: " << i << '\n';
+            for(const auto& elem:bucket){
+                std::cout << "Key: " << elem.first << ", Value: " << elem.second << "; ";
+            }
+            std::cout << '\n';
+            std::cout << '\n';
+        }
+        i++;
+    }
+}
+
+template<typename TK, typename TV>
+size_t HashTable<TK, TV>::getNumBuckets(){return numBuckets;}
+
+template<typename TK, typename TV>
+size_t HashTable<TK, TV>::getNumElems(){return numElems;}
