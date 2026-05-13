@@ -55,9 +55,19 @@ HashTable<TK, TV>::HashTable(const HashTable& other){
 
 template<typename TK, typename TV>
 TV& HashTable<TK, TV>::operator[](const TK& key){
-    return getElem(key);
-}
+    unsigned bucketIndex = getBucketIndex(key);
 
+    for(auto& elem:buckets[bucketIndex]){
+        if(elem.first == key){
+            return elem.second;
+        }
+    }
+    
+    buckets[bucketIndex].push_back(std::make_pair(key, TV()));
+    numElems++;
+    
+    return buckets[bucketIndex].back().second;
+}
 
 template<typename TK, typename TV>
 unsigned HashTable<TK, TV>::getBucketIndex(const TK& key){
