@@ -20,5 +20,9 @@ void Interface::show(){
     std::cout << ht.getElem("HLWD")<<std::endl;
     ht.printAllValues();
     ht.erase("1234");
+    std::cout << "1::::::\n";
     ht.printAllValues();
+    HashTable<std::string, int> ht2(ht);
+    std::cout << "2::::\n";
+    ht2.printAllValues();
 }

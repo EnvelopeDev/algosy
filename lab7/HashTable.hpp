@@ -17,8 +17,11 @@ private:
     unsigned getBucketIndex(const TK& key);
 public:
     HashTable(const size_t _numBuckets=43);
+    HashTable(const HashTable& other);
     ~HashTable();
 
+    HashTable& operator=(const HashTable& other);
+    TV& operator[](const TK& key);
     void insert(const TK& key, const TV& value);
     TV& getElem(const TK& key);
     bool contains(const TK& key);
@@ -36,6 +39,18 @@ template<typename TK, typename TV>
 HashTable<TK, TV>::HashTable(const size_t _numBuckets):numBuckets(_numBuckets){
     buckets.resize(numBuckets);
     numElems=0;
+}
+
+template<typename TK, typename TV>
+HashTable<TK, TV>::HashTable(const HashTable& other){
+    numBuckets=other.numBuckets;
+    buckets.resize(numBuckets);
+    numElems=other.numElems;
+    auto iter = buckets.begin();
+    for(const auto& bucket:other.buckets){
+        *iter = bucket;
+        iter++;
+    }
 }
 
 template<typename TK, typename TV>
@@ -103,6 +118,7 @@ void HashTable<TK, TV>::erase(const TK& key){
         }
         iter++;
     }
+    numElems--;
 }
 
 template<typename TK, typename TV>
