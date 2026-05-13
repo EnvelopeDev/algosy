@@ -54,6 +54,12 @@ HashTable<TK, TV>::HashTable(const HashTable& other){
 }
 
 template<typename TK, typename TV>
+TV& HashTable<TK, TV>::operator[](const TK& key){
+    return getElem(key);
+}
+
+
+template<typename TK, typename TV>
 unsigned HashTable<TK, TV>::getBucketIndex(const TK& key){
     return hasher(key)%numBuckets;
 }

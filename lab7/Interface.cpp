@@ -25,4 +25,6 @@ void Interface::show(){
     HashTable<std::string, int> ht2(ht);
     std::cout << "2::::\n";
     ht2.printAllValues();
+    ht2["HLWD"] = 1;
+    ht2.printAllValues();
 }
