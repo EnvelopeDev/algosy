@@ -22,6 +22,7 @@ public:
     void insert(const TK& key, const TV& value);
     TV& getElem(const TK& key);
     bool contains(const TK& key);
+    void erase(const TK& key);
     void printAllValues();
 
     size_t getNumElems();
@@ -84,6 +85,24 @@ bool HashTable<TK, TV>::contains(const TK& key){
         }
     }
     return false;
+}
+
+template<typename TK, typename TV>
+void HashTable<TK, TV>::erase(const TK& key){
+    if(!contains(key)){
+        throw std::invalid_argument("NO SUCH KEY!\n");
+    }
+
+    unsigned bcktIndex = getBucketIndex(key);
+    auto iter = buckets[bcktIndex].begin();
+    auto endIter = buckets[bcktIndex].end();
+    while(iter!=endIter){
+        if((*iter).first==key){
+            buckets[bcktIndex].erase(iter);
+            return;
+        }
+        iter++;
+    }
 }
 
 template<typename TK, typename TV>
