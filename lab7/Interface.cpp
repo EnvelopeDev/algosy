@@ -28,4 +28,7 @@ void Interface::show(){
     ht2["HLWD"] = 1;
     ht2["12345"]=100;
     ht2.printAllValues();
+    ht=ht2;
+    std::cout << "1::::::::::\n";
+    ht.printAllValues();
 }

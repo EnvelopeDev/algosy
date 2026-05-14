@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include <iterator>
 #include <stdexcept>
 
 #include "bmask_set.hpp"
@@ -30,6 +31,85 @@ public:
 
     size_t getNumElems();
     size_t getNumBuckets();
+
+    class Iterator
+    {
+    public:
+        // Теги, необходимые для работы с <algorithm>
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = std::pair<const TK, TV>;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = value_type*;
+        using reference         = value_type&;
+ 
+    private:
+        using BucketVec  = std::vector<std::list<std::pair<TK, TV>>>;
+        using BucketIter = typename BucketVec::iterator;
+        using ElemIter   = typename std::list<std::pair<TK, TV>>::iterator;
+ 
+        BucketVec* buckets;
+        BucketIter bucketIt;   // текущий bucket
+        ElemIter   elemIt;     // текущий элемент внутри bucket
+ 
+        // Пропускаем пустые bucket'ы вперёд
+        void skipEmpty() {
+            while (bucketIt != buckets->end() && bucketIt->empty()) {
+                ++bucketIt;
+            }
+            if (bucketIt != buckets->end()) {
+                elemIt = bucketIt->begin();
+            }
+        }
+ 
+    public:
+        // Конструктор begin
+        Iterator(BucketVec* bkts, BucketIter bIt)
+            : buckets(bkts), bucketIt(bIt)
+        {
+            skipEmpty();
+        }
+ 
+        // Конструктор end
+        Iterator(BucketVec* bkts, BucketIter bIt, ElemIter eIt)
+            : buckets(bkts), bucketIt(bIt), elemIt(eIt) {}
+ 
+        reference operator*() {
+            // reinterpret позволяет вернуть pair<const TK, TV>& из pair<TK, TV>&
+            return reinterpret_cast<reference>(*elemIt);
+        }
+ 
+        pointer operator->() {
+            return reinterpret_cast<pointer>(&(*elemIt));
+        }
+ 
+        // Префиксный ++
+        Iterator& operator++() {
+            ++elemIt;
+            if (elemIt == bucketIt->end()) {
+                ++bucketIt;
+                skipEmpty();
+            }
+            return *this;
+        }
+ 
+        // Постфиксный ++
+        Iterator operator++(int) {
+            Iterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+ 
+        bool operator==(const Iterator& other) const {
+            if (bucketIt != other.bucketIt) return false;
+            // Оба указывают на end — равны
+            if (bucketIt == buckets->end()) return true;
+            return elemIt == other.elemIt;
+        }
+ 
+        bool operator!=(const Iterator& other) const {
+            return !(*this == other);
+        }
+    };
 };
 
 template<typename TK, typename TV>
@@ -70,6 +150,26 @@ TV& HashTable<TK, TV>::operator[](const TK& key){
 }
 
 template<typename TK, typename TV>
+HashTable<TK, TV>& HashTable<TK, TV>::operator=(const HashTable& other){
+    if(this==&other){
+        return *this;
+    }
+    
+    numBuckets = other.numBuckets;
+    numElems = other.numElems;
+    hasher = other.hasher;
+    
+    buckets.clear();
+    buckets.resize(numBuckets);
+    
+    for (size_t i=0; i<numBuckets; i++) {
+        buckets[i] = other.buckets[i];
+    }
+    
+    return *this;
+}
+
+template<typename TK, typename TV>
 unsigned HashTable<TK, TV>::getBucketIndex(const TK& key){
     return hasher(key)%numBuckets;
 }
@@ -85,26 +185,19 @@ void HashTable<TK, TV>::insert(const TK& key, const TV& value){
         }
     }
 
-    if(buckets[bucketIndex].empty()){
-        buckets[bucketIndex].push_back(std::make_pair(key, value));
-    }
+    buckets[bucketIndex].push_back(std::make_pair(key, value));
     numElems++;
 }
 
 template<typename TK, typename TV>
 TV& HashTable<TK, TV>::getElem(const TK& key){
-    if(!contains(key)){
-        throw std::invalid_argument("NO SUCH KEY!\n");
-    }
-    unsigned bcktIndex = getBucketIndex(key);
-    TV& value=(*buckets[bcktIndex].begin()).second;
-    for(const auto& elem:buckets[bcktIndex]){
+    unsigned idx = getBucketIndex(key);
+    for(auto& elem:buckets[idx]){
         if(elem.first==key){
-            value = elem.second;
-            break;
+            return elem.second;
         }
     }
-    return value;
+    throw std::invalid_argument("NO SUCH KEY!\n"); // never reached
 }
 
 template<typename TK, typename TV>
@@ -130,11 +223,11 @@ void HashTable<TK, TV>::erase(const TK& key){
     while(iter!=endIter){
         if((*iter).first==key){
             buckets[bcktIndex].erase(iter);
+            numElems--;
             return;
         }
         iter++;
     }
-    numElems--;
 }
 
 template<typename TK, typename TV>
