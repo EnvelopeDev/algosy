@@ -1,14 +1,14 @@
 #pragma once
 #include "HashTable.hpp"
+#include "sequence.hpp"
 #include "generator.hpp"
 #include <iostream>
 #include <string>
-class Interface
-{
-private:
-    
+
+class Interface {
 public:
     Interface();
-    void show();
     ~Interface();
+
+    void show();
 };
