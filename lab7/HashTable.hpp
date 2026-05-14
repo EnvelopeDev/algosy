@@ -101,7 +101,6 @@ public:
  
         bool operator==(const Iterator& other) const {
             if (bucketIt != other.bucketIt) return false;
-            // Оба указывают на end — равны
             if (bucketIt == buckets->end()) return true;
             return elemIt == other.elemIt;
         }
@@ -110,6 +109,14 @@ public:
             return !(*this == other);
         }
     };
+
+    Iterator begin(){
+        return Iterator(&buckets, buckets.begin());
+    }
+ 
+    Iterator end(){
+        return Iterator(&buckets, buckets.end(), {});
+    }
 };
 
 template<typename TK, typename TV>
